@@ -17,7 +17,7 @@ type Client struct {
 	BaseURL *url.URL
 
 	Organizations OrganizationsService
-	// Transactions  TransactionsService
+	Transactions  TransactionsService
 
 	// Optional function callback
 	onRequestCompleted RequestCompletionCallback
@@ -68,6 +68,7 @@ func New(httpClient *http.Client, apiUrl string) *Client {
 		BaseURL: baseURL,
 	}
 	c.Organizations = &OrganizationsServiceOp{client: c}
+	c.Transactions = &TransactionsServiceOp{client: c}
 
 	return c
 }

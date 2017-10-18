@@ -15,7 +15,6 @@ type OrganizationsService interface {
 }
 
 // Organization struct
-// Reflects :
 // {
 // 	"organization": {
 // 		"slug": "croissant-9134",
@@ -64,7 +63,7 @@ func (o Organization) String() string {
 	return string(bytes)
 }
 
-// Get Organizations
+// Get Organization
 func (s *OrganizationsServiceOp) Get(ctx context.Context, id string) (*Organization, *Response, error) {
 
 	path := fmt.Sprintf("%s/%s", organizationsBasePath, id)
