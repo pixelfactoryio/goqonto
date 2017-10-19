@@ -58,17 +58,17 @@ func main() {
 	}
 	fmt.Println(orga)
 
-	params := goqonto.TransactionsOptions{
+	params := &goqonto.TransactionsOptions{
 		Slug: orga.Slug,
 		IBAN: orga.BankAccounts[0].IBAN,
 	}
 
-	list := goqonto.ListOptions{
+	list := &goqonto.ListOptions{
 		Page:    1,
 		PerPage: 10,
 	}
 
-	transactions, resp, err := qonto.Transactions.List(ctx, &params, &list)
+	transactions, resp, err := qonto.Transactions.List(ctx, params, list)
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
