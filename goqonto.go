@@ -12,6 +12,7 @@ import (
 	"github.com/amine7536/goqonto/context"
 )
 
+// Client Qonto API Client struct
 type Client struct {
 	client  *http.Client
 	BaseURL *url.URL
@@ -26,11 +27,13 @@ type Client struct {
 // RequestCompletionCallback defines the type of the request callback function
 type RequestCompletionCallback func(*http.Request, *http.Response)
 
+// Response struct
 type Response struct {
 	*http.Response
 	Meta *ResponseMeta
 }
 
+// ResponseMeta struct
 type ResponseMeta struct {
 	CurrentPage int `json:"current_page,omiempty"`
 	NextPage    int `json:"next_page,omiempty"`
@@ -40,28 +43,39 @@ type ResponseMeta struct {
 	PerPage     int `json:"per_page,omiempty"`
 }
 
+// Convert ResponseMeta to a string
+// TODO: shouldn't Panic here
+func (m ResponseMeta) String() string {
+	bytes, err := json.Marshal(m)
+	if err != nil {
+		panic(err)
+	}
+	return string(bytes)
+}
+
 // An ErrorResponse reports the error caused by an API request
 type ErrorResponse struct {
 	// HTTP response that caused this error
 	Response *http.Response
 
 	// Error message
+	Code    int    `json:"code"`
 	Message string `json:"message"`
 }
 
-// ListOptions
+// ListOptions used for pagination
 type ListOptions struct {
-	Page          int    `json:"page,omitempty"`
-	PerPage       int    `json:"per_page,omitempty"`
-	EnvironmentID string `json:"environment_id,omitempty"`
+	Page    int `json:"page,omitempty"`
+	PerPage int `json:"per_page,omitempty"`
 }
 
-func New(httpClient *http.Client, apiUrl string) *Client {
+// New returns new Qonto API Client
+func New(httpClient *http.Client, apiURL string) *Client {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
 	}
 
-	baseURL, _ := url.Parse(apiUrl)
+	baseURL, _ := url.Parse(apiURL)
 
 	c := &Client{
 		client:  httpClient,
@@ -73,6 +87,7 @@ func New(httpClient *http.Client, apiUrl string) *Client {
 	return c
 }
 
+// NewRequest prepare Request
 func (c *Client) NewRequest(ctx context.Context, method, urlStr string, body interface{}) (*http.Request, error) {
 	rel, err := url.Parse(urlStr)
 	if err != nil {

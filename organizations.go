@@ -7,34 +7,24 @@ import (
 	"github.com/amine7536/goqonto/context"
 )
 
+// transactionsBasePath Qonto API Organizations Endpoint
 const organizationsBasePath = "v1/organizations"
 
-// OrganizationsService Service
+// OrganizationsService interface
+// Get: get organizations details
 type OrganizationsService interface {
 	Get(context.Context, string) (*Organization, *Response, error)
 }
 
 // Organization struct
-// {
-// 	"organization": {
-// 		"slug": "croissant-9134",
-// 		"bank_accounts": [
-// 			{
-// 				"slug": "croissant-bank-account-1",
-// 				"iban": "FR7616798000010000004321396",
-// 				"bic": "TRZOFR21XXX",
-// 				"currency": "EUR",
-// 				"balance": 24.94
-// 			}
-// 		]
-// 	}
-// }
+// https://api-doc.qonto.eu/1.0/organizations/show-organization-1
 type Organization struct {
 	Slug         string        `json:"slug"`
 	BankAccounts []BankAccount `json:"bank_accounts"`
 }
 
 // BankAccount struct
+// https://api-doc.qonto.eu/1.0/organizations/show-organization-1
 type BankAccount struct {
 	Slug     string  `json:"slug"`
 	IBAN     string  `json:"iban"`
@@ -43,13 +33,14 @@ type BankAccount struct {
 	Balance  float32 `json:"balance"`
 }
 
-// OrganizationsServiceOp Service
+// OrganizationsServiceOp struct used to embed *Client
 type OrganizationsServiceOp struct {
 	client *Client
 }
 
 var _ OrganizationsService = &OrganizationsServiceOp{}
 
+// organizationsRoot root key in the JSON response for organizations
 type organizationsRoot struct {
 	Organization Organization `json:"organization"`
 }
