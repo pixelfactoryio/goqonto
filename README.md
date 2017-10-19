@@ -1,4 +1,4 @@
-# goqonto
+# GoQonto
 Qonto API Go client
 
 https://api-doc.qonto.eu/1.0/welcome
