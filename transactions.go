@@ -13,10 +13,8 @@ const transactionsBasePath = "v1/transactions"
 // TransactionsOptions Qonto API Transactions query strings
 // https://api-doc.qonto.eu/1.0/transactions/list-transactions
 type TransactionsOptions struct {
-	Slug        string `json:"slug"`
-	IBAN        string `json:"iban"`
-	CurrentPage int    `json:"current_page"`
-	PerPage     int    `json:"per_page"`
+	Slug string `json:"slug"`
+	IBAN string `json:"iban"`
 }
 
 // TransactionsService interface
