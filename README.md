@@ -1,7 +1,9 @@
 # goqonto
-Go bindings for Qonto REST API : https://api-doc.qonto.eu/1.0/welcome
+Qonto API Go client
 
-Heavily inspired by DigitalOcean GoDo : https://github.com/digitalocean/godo
+https://api-doc.qonto.eu/1.0/welcome
+
+(Heavily inspired by DigitalOcean GoDo : https://github.com/digitalocean/godo)
 
 !! Work In Progress !!
 
