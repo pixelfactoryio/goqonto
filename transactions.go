@@ -29,10 +29,10 @@ type TransactionsService interface {
 // Transaction struct
 // https://api-doc.qonto.eu/1.0/transactions/list-transactions
 type Transaction struct {
-	Amount          float32   `json:"amount"`
-	AmountCents     int       `json:"amount_cents"`
-	LocalAmout      float32   `json:"local_amount"`
-	LocalAmoutCents int       `json:"local_amount_cents"`
+	Amount          float64   `json:"amount"`
+	AmountCents     int64     `json:"amount_cents"`
+	LocalAmout      float64   `json:"local_amount"`
+	LocalAmoutCents int64     `json:"local_amount_cents"`
 	Side            string    `json:"side"`
 	OperationType   string    `json:"operation_type"`
 	Currency        string    `json:"currency"`
