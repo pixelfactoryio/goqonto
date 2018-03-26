@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"reflect"
 	"testing"
+	"time"
 )
 
 func TestTransactionsGet(t *testing.T) {
@@ -71,6 +72,7 @@ func TestTransactionsGet(t *testing.T) {
 		t.Errorf("Organizations.Get returned error: %v", err)
 	}
 
+	settledAt, _ := time.Parse(time.RFC3339, "2018-03-23T08:23:18.000Z")
 	trx := Transaction{
 		Amount:          0.01,
 		AmountCents:     1,
@@ -81,7 +83,7 @@ func TestTransactionsGet(t *testing.T) {
 		Currency:        "EUR",
 		LocalCurrency:   "EUR",
 		Label:           "Amine",
-		SettledAt:       "2018-03-23T08:23:18.000Z",
+		SettledAt:       settledAt,
 	}
 
 	expectedTrx := new(transactionsRoot).Transactions
