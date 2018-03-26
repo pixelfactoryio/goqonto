@@ -24,7 +24,10 @@ func TestOrganizationsGet(t *testing.T) {
 						"iban": "FR7616798000010000004321396",
 						"bic": "TRZOFR21XXX",
 						"currency": "EUR",
-						"balance": 24.94
+						"balance": 225.3,
+						"balance_cents": 22530,
+						"authorized_balance": 213.2,
+						"authorized_balance_cents": 21320
 					}
 				]
 			}
@@ -39,11 +42,14 @@ func TestOrganizationsGet(t *testing.T) {
 	}
 
 	bankAccount := BankAccount{
-		Slug:     "croissant-bank-account-1",
-		IBAN:     "FR7616798000010000004321396",
-		BIC:      "TRZOFR21XXX",
-		Currency: "EUR",
-		Balance:  24.94,
+		Slug:                   "croissant-bank-account-1",
+		IBAN:                   "FR7616798000010000004321396",
+		BIC:                    "TRZOFR21XXX",
+		Currency:               "EUR",
+		Balance:                225.3,
+		BalanceCents:           22530,
+		AuthorizedBalance:      213.2,
+		AuthorizedBalanceCents: 21320,
 	}
 
 	expected := &Organization{

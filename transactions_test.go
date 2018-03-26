@@ -19,28 +19,36 @@ func TestTransactionsGet(t *testing.T) {
 			"transactions": 
 			[
 				{
-					"amount":0.01,
-					"amount_cents":1,
-					"local_amount":0.01,
-					"local_amount_cents":1,
-					"side":"debit",
-					"operation_type":"transfer",
-					"currency":"EUR",
-					"local_currency":"EUR",
-					"label":"Amine",
-					"settled_at":"2018-03-23T08:23:18.000Z"
+					"transaction_id": "croissant-bank-account-1-transaction-491",
+					"amount": 0.01,
+					"amount_cents": 1,
+					"local_amount": 0.01,
+					"local_amount_cents": 1,
+					"side": "debit",
+					"operation_type": "transfer",
+					"currency": "EUR",
+					"local_currency": "EUR",
+					"label": "Amine",
+					"settled_at": "2018-03-23T08:23:18.000Z",
+					"emitted_at": "2018-03-22T14:47:07.909Z",
+					"status": "completed",
+					"note": null
 				},
 				{
-					"amount":0.01,
-					"amount_cents":1,
-					"local_amount":0.01,
-					"local_amount_cents":1,
-					"side":"debit",
-					"operation_type":"transfer",
-					"currency":"EUR",
-					"local_currency":"EUR",
-					"label":"Amine",
-					"settled_at":"2018-03-23T08:23:18.000Z"
+					"transaction_id": "croissant-bank-account-1-transaction-490",
+					"amount": 0.01,
+					"amount_cents": 1,
+					"local_amount": 0.01,
+					"local_amount_cents": 1,
+					"side": "credit",
+					"operation_type": "card",
+					"currency": "EUR",
+					"local_currency": "EUR",
+					"label": "Amine",
+					"settled_at": "2018-03-22T08:23:43.000Z",
+					"emitted_at": "2018-03-22T14:47:07.909Z",
+					"status": "completed",
+					"note": null
 				}
 			],
 			"meta": {
@@ -71,7 +79,8 @@ func TestTransactionsGet(t *testing.T) {
 		t.Errorf("Organizations.Get returned error: %v", err)
 	}
 
-	trx := Transaction{
+	trx1 := Transaction{
+		TransactionID:   "croissant-bank-account-1-transaction-491",
 		Amount:          0.01,
 		AmountCents:     1,
 		LocalAmout:      0.01,
@@ -82,13 +91,31 @@ func TestTransactionsGet(t *testing.T) {
 		LocalCurrency:   "EUR",
 		Label:           "Amine",
 		SettledAt:       "2018-03-23T08:23:18.000Z",
+		EmittedAt:       "2018-03-22T14:47:07.909Z",
+		Status:          "completed",
+		Note:            "",
+	}
+
+	trx2 := Transaction{
+		TransactionID:   "croissant-bank-account-1-transaction-490",
+		Amount:          0.01,
+		AmountCents:     1,
+		LocalAmout:      0.01,
+		LocalAmoutCents: 1,
+		Side:            "credit",
+		OperationType:   "card",
+		Currency:        "EUR",
+		LocalCurrency:   "EUR",
+		Label:           "Amine",
+		SettledAt:       "2018-03-22T08:23:43.000Z",
+		EmittedAt:       "2018-03-22T14:47:07.909Z",
+		Status:          "completed",
+		Note:            "",
 	}
 
 	expectedTrx := new(transactionsRoot).Transactions
-
-	for i := 0; i < 2; i++ {
-		expectedTrx = append(expectedTrx, trx)
-	}
+	expectedTrx = append(expectedTrx, trx1)
+	expectedTrx = append(expectedTrx, trx2)
 
 	expectedMeta := &ResponseMeta{
 		CurrentPage: 2,
