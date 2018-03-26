@@ -3,6 +3,7 @@ package goqonto
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/amine7536/goqonto/context"
 )
@@ -29,20 +30,20 @@ type TransactionsService interface {
 // Transaction struct
 // https://api-doc.qonto.eu/2.0/transactions/list-transactions
 type Transaction struct {
-	TransactionID   string  `json:"transaction_id"`
-	Amount          float32 `json:"amount"`
-	AmountCents     int     `json:"amount_cents"`
-	LocalAmout      float32 `json:"local_amount"`
-	LocalAmoutCents int     `json:"local_amount_cents"`
-	Side            string  `json:"side"`
-	OperationType   string  `json:"operation_type"`
-	Currency        string  `json:"currency"`
-	LocalCurrency   string  `json:"local_currency"`
-	SettledAt       string  `json:"settled_at"`
-	EmittedAt       string  `json:"emitted_at"`
-	Status          string  `jsont:"status"`
-	Note            string  `json:"note"`
-	Label           string  `json:"label"`
+	TransactionID   string    `json:"transaction_id"`
+	Amount          float32   `json:"amount"`
+	AmountCents     int       `json:"amount_cents"`
+	LocalAmout      float32   `json:"local_amount"`
+	LocalAmoutCents int       `json:"local_amount_cents"`
+	Side            string    `json:"side"`
+	OperationType   string    `json:"operation_type"`
+	Currency        string    `json:"currency"`
+	LocalCurrency   string    `json:"local_currency"`
+	SettledAt       time.Time `json:"settled_at"`
+	EmittedAt       time.Time `json:"emitted_at"`
+	Status          string    `jsont:"status"`
+	Note            string    `json:"note"`
+	Label           string    `json:"label"`
 }
 
 // TransactionsServiceOp struct used to embed *Client

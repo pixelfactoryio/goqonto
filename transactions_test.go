@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"reflect"
 	"testing"
+	"time"
 )
 
 func TestTransactionsGet(t *testing.T) {
@@ -79,6 +80,8 @@ func TestTransactionsGet(t *testing.T) {
 		t.Errorf("Organizations.Get returned error: %v", err)
 	}
 
+	trx1SettledAt, _ := time.Parse(time.RFC3339, "2018-03-23T08:23:18.000Z")
+	trx1EmittedAt, _ := time.Parse(time.RFC3339, "2018-03-22T14:47:07.909Z")
 	trx1 := Transaction{
 		TransactionID:   "croissant-bank-account-1-transaction-491",
 		Amount:          0.01,
@@ -90,12 +93,14 @@ func TestTransactionsGet(t *testing.T) {
 		Currency:        "EUR",
 		LocalCurrency:   "EUR",
 		Label:           "Amine",
-		SettledAt:       "2018-03-23T08:23:18.000Z",
-		EmittedAt:       "2018-03-22T14:47:07.909Z",
+		SettledAt:       trx1SettledAt,
+		EmittedAt:       trx1EmittedAt,
 		Status:          "completed",
 		Note:            "",
 	}
 
+	trx2SettledAt, _ := time.Parse(time.RFC3339, "2018-03-22T08:23:43.000Z")
+	trx2EmittedAt, _ := time.Parse(time.RFC3339, "2018-03-22T14:47:07.909Z")
 	trx2 := Transaction{
 		TransactionID:   "croissant-bank-account-1-transaction-490",
 		Amount:          0.01,
@@ -107,8 +112,8 @@ func TestTransactionsGet(t *testing.T) {
 		Currency:        "EUR",
 		LocalCurrency:   "EUR",
 		Label:           "Amine",
-		SettledAt:       "2018-03-22T08:23:43.000Z",
-		EmittedAt:       "2018-03-22T14:47:07.909Z",
+		SettledAt:       trx2SettledAt,
+		EmittedAt:       trx2EmittedAt,
 		Status:          "completed",
 		Note:            "",
 	}
