@@ -8,7 +8,7 @@ import (
 )
 
 // transactionsBasePath Qonto API Organizations Endpoint
-const organizationsBasePath = "v1/organizations"
+const organizationsBasePath = "v2/organizations"
 
 // OrganizationsService interface
 // Get: get organizations details
@@ -17,20 +17,23 @@ type OrganizationsService interface {
 }
 
 // Organization struct
-// https://api-doc.qonto.eu/1.0/organizations/show-organization-1
+// https://api-doc.qonto.eu/2.0/organizations/show-organization-1
 type Organization struct {
 	Slug         string        `json:"slug"`
 	BankAccounts []BankAccount `json:"bank_accounts"`
 }
 
 // BankAccount struct
-// https://api-doc.qonto.eu/1.0/organizations/show-organization-1
+// https://api-doc.qonto.eu/2.0/organizations/show-organization-1
 type BankAccount struct {
-	Slug     string  `json:"slug"`
-	IBAN     string  `json:"iban"`
-	BIC      string  `json:"bic"`
-	Currency string  `json:"currency"`
-	Balance  float32 `json:"balance"`
+	Slug                   string  `json:"slug"`
+	IBAN                   string  `json:"iban"`
+	BIC                    string  `json:"bic"`
+	Currency               string  `json:"currency"`
+	Balance                float32 `json:"balance"`
+	BalanceCents           int     `json:"balance_cents"`
+	AuthorizedBalance      float32 `json:"authorized_balance"`
+	AuthorizedBalanceCents int     `json:"authorized_balance_cents"`
 }
 
 // OrganizationsServiceOp struct used to embed *Client
