@@ -15,6 +15,8 @@ go get gopkg.in/amine7536/goqonto.v2
 
 ## API documentation
 
+Package Documentation is located at : https://godoc.org/gopkg.in/amine7536/goqonto.v2
+
 Qonto API v2 documentation is located at : https://api-doc.qonto.eu/2.0/welcome
 
 
