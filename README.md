@@ -1,3 +1,5 @@
+[![Travis branch](https://img.shields.io/travis/amine7536/goqonto/v1.svg?style=flat-square)](https://travis-ci.org/amine7536/goqonto.svg?branch=v1)
+
 # GoQonto
 Qonto API (v1) Go client
 
