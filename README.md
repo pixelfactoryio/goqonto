@@ -1,11 +1,24 @@
+[![Travis branch](https://img.shields.io/travis/amine7536/goqonto/v2.svg?style=flat-square)](https://travis-ci.org/amine7536/goqonto)
+
 # GoQonto
-Qonto API Go client
+Qonto API (v2) Go client
 
-https://api-doc.qonto.eu/1.0/welcome
+## Installation
 
-(Heavily inspired by DigitalOcean GoDo : https://github.com/digitalocean/godo)
+The import path for the package is gopkg.in/amine7536/goqonto.v2
 
-!! Work In Progress !!
+To install it, run:
+
+```
+go get gopkg.in/amine7536/goqonto.v2
+```
+
+## API documentation
+
+Package Documentation is located at : https://godoc.org/gopkg.in/amine7536/goqonto.v2
+
+Qonto API v2 documentation is located at : https://api-doc.qonto.eu/2.0/welcome
+
 
 ## Usage
 
@@ -14,12 +27,13 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 
-	"github.com/amine7536/goqonto"
+	"gopkg.in/amine7536/goqonto.v2"
 )
 
 type AuthTransport struct {
@@ -37,14 +51,14 @@ func main() {
 
 	apiURL := os.Getenv("QONTO_API")
 	orgID := os.Getenv("QONTO_ORD_ID")
-	orgSlug := os.Getenv("QONTO_ORG_SLUG")
-	orgSecret := os.Getenv("QONTO_ORG_SECRET")
+	userLogin := os.Getenv("QONTO_USER_LOGIN")
+	userSecretKey := os.Getenv("QONTO_SECRET_KEY")
 
 	client := http.Client{
 		Transport: AuthTransport{
 			&http.Transport{},
-			orgSlug,
-			orgSecret,
+			userLogin,
+			userSecretKey,
 		},
 	}
 
@@ -56,11 +70,12 @@ func main() {
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
-	fmt.Println(orga)
+	prettyPrint(orga)
 
 	params := &goqonto.TransactionsOptions{
-		Slug: orga.Slug,
-		IBAN: orga.BankAccounts[0].IBAN,
+		Slug:   orga.Slug,
+		IBAN:   orga.BankAccounts[0].IBAN,
+		Status: []string{"pending"},
 	}
 
 	list := &goqonto.ListOptions{
@@ -74,9 +89,18 @@ func main() {
 	}
 
 	for _, trx := range transactions {
-		fmt.Println(trx)
+		prettyPrint(trx)
 	}
 
-	fmt.Println(resp.Meta)
+	prettyPrint(resp.Meta)
+}
+
+func prettyPrint(v interface{}) {
+	b, _ := json.MarshalIndent(v, "", "  ")
+	println(string(b))
 }
 ```
+
+## Credits
+
+This client is heavily inspired by DigitalOcean GoDo : https://github.com/digitalocean/godo
