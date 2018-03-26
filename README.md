@@ -1,11 +1,20 @@
 # GoQonto
-Qonto API Go client
+Qonto API (v1) Go client
 
-https://api-doc.qonto.eu/1.0/welcome
+## Installation
 
-(Heavily inspired by DigitalOcean GoDo : https://github.com/digitalocean/godo)
+The import path for the package is gopkg.in/amine7536/goqonto.v1
 
-!! Work In Progress !!
+To install it, run:
+
+```
+go get gopkg.in/amine7536/goqonto.v1
+```
+
+## API documentation
+
+Qonto API v1 documentation is located at : https://api-doc.qonto.eu/1.0/welcome
+
 
 ## Usage
 
@@ -14,12 +23,13 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 
-	"github.com/amine7536/goqonto"
+	"gopkg.in/amine7536/goqonto.v1"
 )
 
 type AuthTransport struct {
@@ -56,7 +66,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
-	fmt.Println(orga)
+	prettyPrint(orga)
 
 	params := &goqonto.TransactionsOptions{
 		Slug: orga.Slug,
@@ -74,9 +84,18 @@ func main() {
 	}
 
 	for _, trx := range transactions {
-		fmt.Println(trx)
+		prettyPrint(trx)
 	}
 
-	fmt.Println(resp.Meta)
+	prettyPrint(resp.Meta)
+}
+
+func prettyPrint(v interface{}) {
+	b, _ := json.MarshalIndent(v, "", "  ")
+	println(string(b))
 }
 ```
+
+## Credits
+
+This client is heavily inspired by DigitalOcean GoDo : https://github.com/digitalocean/godo
