@@ -3,3 +3,9 @@ go:
   - "1.8"
   - "1.9"
   - "1.10"
+
+branches:
+  only:
+  - master
+  - v1
+  - v2
