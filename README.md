@@ -50,7 +50,7 @@ func (t AuthTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 func main() {
 
 	apiURL := os.Getenv("QONTO_API")
-	orgID := os.Getenv("QONTO_ORD_ID")
+	orgID := os.Getenv("QONTO_ORG_ID")
 	userLogin := os.Getenv("QONTO_USER_LOGIN")
 	userSecretKey := os.Getenv("QONTO_SECRET_KEY")
 
