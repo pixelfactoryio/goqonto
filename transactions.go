@@ -37,30 +37,30 @@ type TransactionsService interface {
 // Transaction struct
 // https://api-doc.qonto.eu/2.0/transactions/list-transactions
 type Transaction struct {
-	TransactionID      string        `json:"transaction_id"`
-	Amount             float64       `json:"amount"`
-	AmountCents        int           `json:"amount_cents"`
-	AttachmentIds      []string      `json:"attachment_ids"`
-	LocalAmount        float64       `json:"local_amount"`
-	LocalAmountCents   int           `json:"local_amount_cents"`
-	Side               string        `json:"side"`
-	OperationType      string        `json:"operation_type"`
-	Currency           string        `json:"currency"`
-	LocalCurrency      string        `json:"local_currency"`
-	Label              string        `json:"label"`
-	SettledAt          time.Time     `json:"settled_at"`
-	EmittedAt          time.Time     `json:"emitted_at"`
-	UpdatedAt          time.Time     `json:"updated_at"`
-	Status             string        `json:"status"`
-	Note               interface{}   `json:"note"`
-	Reference          interface{}   `json:"reference"`
-	VatAmount          float64       `json:"vat_amount"`
-	VatAmountCents     int           `json:"vat_amount_cents"`
-	VatRate            float64       `json:"vat_rate"`
-	InitiatorID        interface{}   `json:"initiator_id"`
-	LabelIds           []interface{} `json:"label_ids"`
-	AttachmentLost     bool          `json:"attachment_lost"`
-	AttachmentRequired bool          `json:"attachment_required"`
+	TransactionID      string    `json:"transaction_id"`
+	Amount             float64   `json:"amount"`
+	AmountCents        int       `json:"amount_cents"`
+	AttachmentIds      []string  `json:"attachment_ids"`
+	LocalAmount        float64   `json:"local_amount"`
+	LocalAmountCents   int       `json:"local_amount_cents"`
+	Side               string    `json:"side"`
+	OperationType      string    `json:"operation_type"`
+	Currency           string    `json:"currency"`
+	LocalCurrency      string    `json:"local_currency"`
+	Label              string    `json:"label"`
+	SettledAt          time.Time `json:"settled_at"`
+	EmittedAt          time.Time `json:"emitted_at"`
+	UpdatedAt          time.Time `json:"updated_at"`
+	Status             string    `json:"status"`
+	Note               string    `json:"note"`
+	Reference          string    `json:"reference"`
+	VatAmount          float64   `json:"vat_amount"`
+	VatAmountCents     int       `json:"vat_amount_cents"`
+	VatRate            float64   `json:"vat_rate"`
+	InitiatorID        string    `json:"initiator_id"`
+	LabelIds           []string  `json:"label_ids"`
+	AttachmentLost     bool      `json:"attachment_lost"`
+	AttachmentRequired bool      `json:"attachment_required"`
 }
 
 // TransactionsServiceOp struct used to embed *Client
