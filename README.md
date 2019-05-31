@@ -36,67 +36,64 @@ import (
 )
 
 type AuthTransport struct {
-    *http.Transport
-    Slug   string
-    Secret string
+	*http.Transport
+	Slug   string
+	Secret string
 }
 
 func (t AuthTransport) RoundTrip(r *http.Request) (*http.Response, error) {
-    r.Header.Set("Authorization", fmt.Sprintf("%s:%s", t.Slug, t.Secret))
-    return t.Transport.RoundTrip(r)
+	r.Header.Set("Authorization", fmt.Sprintf("%s:%s", t.Slug, t.Secret))
+	r.Header.Set("Hello", "qonto")
+	return t.Transport.RoundTrip(r)
 }
 
 func main() {
 
-    apiURL := os.Getenv("QONTO_API")
-    orgID := os.Getenv("QONTO_ORG_ID")
-    userLogin := os.Getenv("QONTO_USER_LOGIN")
-    userSecretKey := os.Getenv("QONTO_SECRET_KEY")
+	apiURL := os.Getenv("QONTO_API")
+	orgID := os.Getenv("QONTO_ORG_ID")
+	userLogin := os.Getenv("QONTO_USER_LOGIN")
+	userSecretKey := os.Getenv("QONTO_SECRET_KEY")
 
-    client := http.Client{
-        Transport: AuthTransport{
-            &http.Transport{},
-            userLogin,
-            userSecretKey,
-        },
-    }
+	client := http.Client{
+		Transport: AuthTransport{
+			&http.Transport{},
+			userLogin,
+			userSecretKey,
+		},
+	}
 
-    qonto := goqonto.New(&client, apiURL)
+	qonto := goqonto.New(&client, apiURL)
+	ctx := context.Background()
 
-    ctx := context.Background()
+	orga, _, err := qonto.Organizations.Get(ctx, orgID)
+	if err != nil {
+		fmt.Println(err)
+		log.Fatalln(err.Error())
+	}
+	prettyPrint(orga)
 
-    orga, _, err := qonto.Organizations.Get(ctx, orgID)
-    if err != nil {
-        log.Fatalln(err.Error())
-    }
-    prettyPrint(orga)
+	params := &goqonto.TransactionsOptions{
+		Slug:   orga.Slug,
+		IBAN:   orga.BankAccounts[0].IBAN,
+		Status: []string{"completed"},
+	}
 
-    params := &goqonto.TransactionsOptions{
-        Slug:   orga.Slug,
-        IBAN:   orga.BankAccounts[0].IBAN,
-        Status: []string{"pending"},
-    }
+	transactions, resp, err := qonto.Transactions.List(ctx, params)
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
 
-    list := &goqonto.ListOptions{
-        Page:    1,
-        PerPage: 10,
-    }
+	for _, trx := range transactions {
+		prettyPrint(trx)
+	}
 
-    transactions, resp, err := qonto.Transactions.List(ctx, params, list)
-    if err != nil {
-        log.Fatalln(err.Error())
-    }
+	prettyPrint(resp.Meta)
 
-    for _, trx := range transactions {
-        prettyPrint(trx)
-    }
-
-    prettyPrint(resp.Meta)
 }
 
 func prettyPrint(v interface{}) {
-    b, _ := json.MarshalIndent(v, "", "  ")
-    println(string(b))
+	b, _ := json.MarshalIndent(v, "", "  ")
+	println(string(b))
 }
 ```
 
