@@ -63,12 +63,6 @@ type ErrorResponse struct {
 	Message string `json:"message"`
 }
 
-// ListOptions used for pagination
-type ListOptions struct {
-	Page    int `json:"page,omitempty"`
-	PerPage int `json:"per_page,omitempty"`
-}
-
 // New returns new Qonto API Client
 func New(httpClient *http.Client, apiURL string) *Client {
 	if httpClient == nil {
