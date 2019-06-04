@@ -1,12 +1,11 @@
 package goqonto
 
 import (
+	"context"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"testing"
-
-	"github.com/amine7536/goqonto/context"
 )
 
 var (

@@ -2,14 +2,13 @@ package goqonto
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-
-	"github.com/amine7536/goqonto/context"
 )
 
 // Client Qonto API Client struct
