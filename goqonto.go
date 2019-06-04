@@ -2,14 +2,13 @@ package goqonto
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-
-	"github.com/amine7536/goqonto/context"
 )
 
 // Client Qonto API Client struct
@@ -126,7 +125,7 @@ func newResponse(r *http.Response) *Response {
 // pointed to by v, or returned as an error if an API error has occurred. If v implements the io.Writer interface,
 // the raw response will be written to v, without attempting to decode it.
 func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*Response, error) {
-	resp, err := context.DoRequestWithClient(ctx, c.client, req)
+	resp, err := DoRequestWithClient(ctx, c.client, req)
 	if err != nil {
 		return nil, err
 	}
@@ -162,6 +161,20 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*Res
 	}
 
 	return response, err
+}
+
+// DoRequest submits an HTTP request.
+func DoRequest(ctx context.Context, req *http.Request) (*http.Response, error) {
+	return DoRequestWithClient(ctx, http.DefaultClient, req)
+}
+
+// DoRequestWithClient submits an HTTP request using the specified client.
+func DoRequestWithClient(
+	ctx context.Context,
+	client *http.Client,
+	req *http.Request) (*http.Response, error) {
+	req = req.WithContext(ctx)
+	return client.Do(req)
 }
 
 // CheckResponse checks the API response for errors, and returns them if present. A response is considered an
