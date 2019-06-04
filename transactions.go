@@ -75,11 +75,6 @@ type transactionsRoot struct {
 	Transactions []Transaction `json:"transactions"`
 }
 
-// metaRoot root key in the JSON response for meta
-type metaRoot struct {
-	Meta ResponseMeta `json:"meta"`
-}
-
 // Convert Transaction to a string
 // TODO: shouldn't Panic here
 func (t Transaction) String() string {

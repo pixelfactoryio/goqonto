@@ -19,6 +19,7 @@ type Client struct {
 
 	Organizations OrganizationsService
 	Transactions  TransactionsService
+	Memberships   MembershipsService
 
 	// Optional function callback
 	onRequestCompleted RequestCompletionCallback
@@ -41,6 +42,11 @@ type ResponseMeta struct {
 	TotalPages  int `json:"total_pages,omiempty"`
 	TotalCount  int `json:"total_count,omiempty"`
 	PerPage     int `json:"per_page,omiempty"`
+}
+
+// metaRoot root key in the JSON response for meta
+type metaRoot struct {
+	Meta ResponseMeta `json:"meta"`
 }
 
 // Convert ResponseMeta to a string
@@ -77,6 +83,7 @@ func New(httpClient *http.Client, apiURL string) *Client {
 	}
 	c.Organizations = &OrganizationsServiceOp{client: c}
 	c.Transactions = &TransactionsServiceOp{client: c}
+	c.Memberships = &MembershipsServiceOp{client: c}
 
 	return c
 }
