@@ -9,7 +9,7 @@ The import path for the package is gopkg.in/amine7536/goqonto.v2
 
 To install it, run:
 
-```
+```bash
 go get gopkg.in/amine7536/goqonto.v2
 ```
 
@@ -19,21 +19,20 @@ Package Documentation is located at : https://godoc.org/gopkg.in/amine7536/goqon
 
 Qonto API v2 documentation is located at : https://api-doc.qonto.eu/2.0/welcome
 
-
 ## Usage
 
 ```go
 package main
 
 import (
-	"context"
-	"encoding/json"
-	"fmt"
-	"log"
-	"net/http"
-	"os"
+    "context"
+    "encoding/json"
+    "fmt"
+    "log"
+    "net/http"
+    "os"
 
-	"gopkg.in/amine7536/goqonto.v2"
+    "gopkg.in/amine7536/goqonto.v2"
 )
 
 type AuthTransport struct {
@@ -44,13 +43,14 @@ type AuthTransport struct {
 
 func (t AuthTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	r.Header.Set("Authorization", fmt.Sprintf("%s:%s", t.Slug, t.Secret))
+	r.Header.Set("Hello", "qonto")
 	return t.Transport.RoundTrip(r)
 }
 
 func main() {
 
 	apiURL := os.Getenv("QONTO_API")
-	orgID := os.Getenv("QONTO_ORD_ID")
+	orgID := os.Getenv("QONTO_ORG_ID")
 	userLogin := os.Getenv("QONTO_USER_LOGIN")
 	userSecretKey := os.Getenv("QONTO_SECRET_KEY")
 
@@ -63,11 +63,11 @@ func main() {
 	}
 
 	qonto := goqonto.New(&client, apiURL)
-
 	ctx := context.Background()
 
 	orga, _, err := qonto.Organizations.Get(ctx, orgID)
 	if err != nil {
+		fmt.Println(err)
 		log.Fatalln(err.Error())
 	}
 	prettyPrint(orga)
@@ -75,15 +75,10 @@ func main() {
 	params := &goqonto.TransactionsOptions{
 		Slug:   orga.Slug,
 		IBAN:   orga.BankAccounts[0].IBAN,
-		Status: []string{"pending"},
+		Status: []string{"completed"},
 	}
 
-	list := &goqonto.ListOptions{
-		Page:    1,
-		PerPage: 10,
-	}
-
-	transactions, resp, err := qonto.Transactions.List(ctx, params, list)
+	transactions, resp, err := qonto.Transactions.List(ctx, params)
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
@@ -93,6 +88,7 @@ func main() {
 	}
 
 	prettyPrint(resp.Meta)
+
 }
 
 func prettyPrint(v interface{}) {

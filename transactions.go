@@ -1,11 +1,10 @@
 package goqonto
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"time"
-
-	"github.com/amine7536/goqonto/context"
 )
 
 // transactionsBasePath Qonto API Transactions Endpoint
@@ -14,36 +13,53 @@ const transactionsBasePath = "v2/transactions"
 // TransactionsOptions Qonto API Transactions query strings
 // https://api-doc.qonto.eu/2.0/transactions/list-transactions
 type TransactionsOptions struct {
-	Slug   string   `json:"slug"`
-	IBAN   string   `json:"iban"`
-	Status []string `json:"status"`
+	Slug          string   `json:"slug"`
+	IBAN          string   `json:"iban"`
+	Status        []string `json:"status,omiempty"`
+	UpdatedAtFrom string   `json:"updated_at_from,omiempty"`
+	UpdatedAtTo   string   `json:"updated_at_to,omiempty"`
+	SettledAtFrom string   `json:"settled_at_from,omiempty"`
+	SettledAtTo   string   `json:"settled_at_to,omiempty"`
+	SortBy        string   `json:"sort_by,omiempty"`
+	CurrentPage   int64    `json:"current_page,omiempty"`
+	PerPage       int64    `json:"per_page,omiempty"`
 }
 
 // TransactionsService interface
 // List: list all the transactions
 // Get: get one transaction by id
 type TransactionsService interface {
-	List(context.Context, *TransactionsOptions, *ListOptions) ([]Transaction, *Response, error)
+	List(context.Context, *TransactionsOptions) ([]Transaction, *Response, error)
 	Get(context.Context, string) (*Transaction, *Response, error)
 }
 
 // Transaction struct
 // https://api-doc.qonto.eu/2.0/transactions/list-transactions
 type Transaction struct {
-	TransactionID   string    `json:"transaction_id"`
-	Amount          float64   `json:"amount"`
-	AmountCents     int64     `json:"amount_cents"`
-	LocalAmout      float64   `json:"local_amount"`
-	LocalAmoutCents int64     `json:"local_amount_cents"`
-	Side            string    `json:"side"`
-	OperationType   string    `json:"operation_type"`
-	Currency        string    `json:"currency"`
-	LocalCurrency   string    `json:"local_currency"`
-	SettledAt       time.Time `json:"settled_at"`
-	EmittedAt       time.Time `json:"emitted_at"`
-	Status          string    `jsont:"status"`
-	Note            string    `json:"note"`
-	Label           string    `json:"label"`
+	TransactionID      string    `json:"transaction_id"`
+	Amount             float64   `json:"amount"`
+	AmountCents        int       `json:"amount_cents"`
+	AttachmentIds      []string  `json:"attachment_ids"`
+	LocalAmount        float64   `json:"local_amount"`
+	LocalAmountCents   int       `json:"local_amount_cents"`
+	Side               string    `json:"side"`
+	OperationType      string    `json:"operation_type"`
+	Currency           string    `json:"currency"`
+	LocalCurrency      string    `json:"local_currency"`
+	Label              string    `json:"label"`
+	SettledAt          time.Time `json:"settled_at"`
+	EmittedAt          time.Time `json:"emitted_at"`
+	UpdatedAt          time.Time `json:"updated_at"`
+	Status             string    `json:"status"`
+	Note               string    `json:"note"`
+	Reference          string    `json:"reference"`
+	VatAmount          float64   `json:"vat_amount"`
+	VatAmountCents     int       `json:"vat_amount_cents"`
+	VatRate            float64   `json:"vat_rate"`
+	InitiatorID        string    `json:"initiator_id"`
+	LabelIds           []string  `json:"label_ids"`
+	AttachmentLost     bool      `json:"attachment_lost"`
+	AttachmentRequired bool      `json:"attachment_required"`
 }
 
 // TransactionsServiceOp struct used to embed *Client
@@ -58,11 +74,6 @@ type transactionsRoot struct {
 	Transactions []Transaction `json:"transactions"`
 }
 
-// metaRoot root key in the JSON response for meta
-type metaRoot struct {
-	Meta ResponseMeta `json:"meta"`
-}
-
 // Convert Transaction to a string
 // TODO: shouldn't Panic here
 func (t Transaction) String() string {
@@ -74,14 +85,9 @@ func (t Transaction) String() string {
 }
 
 // List all the transactions for a given Org.Slug and BankAccount.IBAN
-func (s *TransactionsServiceOp) List(ctx context.Context, trxOpt *TransactionsOptions, listOpt *ListOptions) ([]Transaction, *Response, error) {
+func (s *TransactionsServiceOp) List(ctx context.Context, trxOpt *TransactionsOptions) ([]Transaction, *Response, error) {
 
-	opt := struct {
-		*TransactionsOptions
-		*ListOptions
-	}{trxOpt, listOpt}
-
-	req, err := s.client.NewRequest(ctx, "GET", transactionsBasePath, opt)
+	req, err := s.client.NewRequest(ctx, "GET", transactionsBasePath, trxOpt)
 	if err != nil {
 		return nil, nil, err
 	}
