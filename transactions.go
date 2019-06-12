@@ -15,14 +15,14 @@ const transactionsBasePath = "v2/transactions"
 type TransactionsOptions struct {
 	Slug          string   `json:"slug"`
 	IBAN          string   `json:"iban"`
-	Status        []string `json:"status,omiempty"`
-	UpdatedAtFrom string   `json:"updated_at_from,omiempty"`
-	UpdatedAtTo   string   `json:"updated_at_to,omiempty"`
-	SettledAtFrom string   `json:"settled_at_from,omiempty"`
-	SettledAtTo   string   `json:"settled_at_to,omiempty"`
-	SortBy        string   `json:"sort_by,omiempty"`
-	CurrentPage   int64    `json:"current_page,omiempty"`
-	PerPage       int64    `json:"per_page,omiempty"`
+	Status        []string `json:"status,omitempty"`
+	UpdatedAtFrom string   `json:"updated_at_from,omitempty"`
+	UpdatedAtTo   string   `json:"updated_at_to,omitempty"`
+	SettledAtFrom string   `json:"settled_at_from,omitempty"`
+	SettledAtTo   string   `json:"settled_at_to,omitempty"`
+	SortBy        string   `json:"sort_by,omitempty"`
+	CurrentPage   int64    `json:"current_page,omitempty"`
+	PerPage       int64    `json:"per_page,omitempty"`
 }
 
 // TransactionsService interface
@@ -39,7 +39,7 @@ type Transaction struct {
 	TransactionID      string    `json:"transaction_id"`
 	Amount             float64   `json:"amount"`
 	AmountCents        int       `json:"amount_cents"`
-	AttachmentIds      []string  `json:"attachment_ids"`
+	AttachmentIds      []string  `json:"attachment_ids,omitempty"`
 	LocalAmount        float64   `json:"local_amount"`
 	LocalAmountCents   int       `json:"local_amount_cents"`
 	Side               string    `json:"side"`
@@ -47,19 +47,19 @@ type Transaction struct {
 	Currency           string    `json:"currency"`
 	LocalCurrency      string    `json:"local_currency"`
 	Label              string    `json:"label"`
-	SettledAt          time.Time `json:"settled_at"`
+	SettledAt          time.Time `json:"settled_at,omitempty"`
 	EmittedAt          time.Time `json:"emitted_at"`
 	UpdatedAt          time.Time `json:"updated_at"`
 	Status             string    `json:"status"`
-	Note               string    `json:"note"`
-	Reference          string    `json:"reference"`
-	VatAmount          float64   `json:"vat_amount"`
-	VatAmountCents     int       `json:"vat_amount_cents"`
-	VatRate            float64   `json:"vat_rate"`
-	InitiatorID        string    `json:"initiator_id"`
-	LabelIds           []string  `json:"label_ids"`
-	AttachmentLost     bool      `json:"attachment_lost"`
-	AttachmentRequired bool      `json:"attachment_required"`
+	Note               string    `json:"note,omitempty"`
+	Reference          string    `json:"reference,omitempty"`
+	VatAmount          float64   `json:"vat_amount,omitempty"`
+	VatAmountCents     int       `json:"vat_amount_cents,omitempty"`
+	VatRate            float64   `json:"vat_rate,omitempty,omitempty"`
+	InitiatorID        string    `json:"initiator_id,omitempty"`
+	LabelIds           []string  `json:"label_ids,omitempty"`
+	AttachmentLost     bool      `json:"attachment_lost,omitempty"`
+	AttachmentRequired bool      `json:"attachment_required,omitempty"`
 }
 
 // TransactionsServiceOp struct used to embed *Client

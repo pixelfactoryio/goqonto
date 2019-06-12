@@ -25,7 +25,7 @@ type Organization struct {
 // BankAccount struct
 // https://api-doc.qonto.eu/2.0/organizations/show-organization-1
 type BankAccount struct {
-	Slug                   string  `json:"slug"`
+	Slug                   string  `json:"slug,omitempty"`
 	IBAN                   string  `json:"iban"`
 	BIC                    string  `json:"bic"`
 	Currency               string  `json:"currency"`
