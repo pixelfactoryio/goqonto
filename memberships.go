@@ -11,8 +11,8 @@ const membershipsBasePath = "v2/memberships"
 // MembershipsOptions Qonto API Memberships query strings
 // https://api-doc.qonto.eu/2.0/memberships/list-memberships
 type MembershipsOptions struct {
-	CurrentPage int64 `json:"current_page,omiempty"`
-	PerPage     int64 `json:"per_page,omiempty"`
+	CurrentPage int64 `json:"current_page,omitempty"`
+	PerPage     int64 `json:"per_page,omitempty"`
 }
 
 // MembershipsService interface
@@ -51,7 +51,7 @@ func (m Membership) String() string {
 	return string(bytes)
 }
 
-// List all the memberships for a given Org.Slug and BankAccount.IBAN
+// List all the memberships
 func (m *MembershipsServiceOp) List(ctx context.Context, memOpt *MembershipsOptions) ([]Membership, *Response, error) {
 
 	req, err := m.client.NewRequest(ctx, "GET", membershipsBasePath, memOpt)

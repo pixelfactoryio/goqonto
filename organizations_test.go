@@ -33,8 +33,10 @@ func TestOrganizationsGet(t *testing.T) {
 			}
 		}`
 
-		fmt.Fprint(w, response)
-	})
+		_, err := fmt.Fprint(w, response)
+		if err != nil {
+			t.Errorf("Unable to write response error: %v", err)
+		}	})
 
 	orga, _, err := client.Organizations.Get(ctx, "9134")
 	if err != nil {

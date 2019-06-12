@@ -35,12 +35,12 @@ type Response struct {
 
 // ResponseMeta struct
 type ResponseMeta struct {
-	CurrentPage int `json:"current_page,omiempty"`
-	NextPage    int `json:"next_page,omiempty"`
-	PrevPage    int `json:"prev_page,omiempty"`
-	TotalPages  int `json:"total_pages,omiempty"`
-	TotalCount  int `json:"total_count,omiempty"`
-	PerPage     int `json:"per_page,omiempty"`
+	CurrentPage int `json:"current_page,omitempty"`
+	NextPage    int `json:"next_page,omitempty"`
+	PrevPage    int `json:"prev_page,omitempty"`
+	TotalPages  int `json:"total_pages,omitempty"`
+	TotalCount  int `json:"total_count,omitempty"`
+	PerPage     int `json:"per_page,omitempty"`
 }
 
 // metaRoot root key in the JSON response for meta

@@ -38,7 +38,10 @@ func TestMembershipsGet(t *testing.T) {
 			}
 		}`
 
-		fmt.Fprint(w, response)
+		_, err := fmt.Fprint(w, response)
+		if err != nil {
+			t.Errorf("Unable to write response error: %v", err)
+		}
 	})
 
 	params := &MembershipsOptions{
