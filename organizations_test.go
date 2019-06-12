@@ -1,6 +1,7 @@
 package goqonto
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"reflect"
@@ -36,9 +37,10 @@ func TestOrganizationsGet(t *testing.T) {
 		_, err := fmt.Fprint(w, response)
 		if err != nil {
 			t.Errorf("Unable to write response error: %v", err)
-		}	})
+		}
+	})
 
-	orga, _, err := client.Organizations.Get(ctx, "9134")
+	orga, _, err := client.Organizations.Get(context.Background(), "9134")
 	if err != nil {
 		t.Errorf("Organizations.Get returned error: %v", err)
 	}
@@ -60,7 +62,7 @@ func TestOrganizationsGet(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(orga, expected) {
-		t.Errorf("Organizations.Get returned %+v, expected %+v", orga, expected)
+		t.Errorf("Organizations.Get \n returned: %+v\n expected: %+v\n", orga, expected)
 	}
 
 }

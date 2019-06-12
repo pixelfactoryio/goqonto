@@ -1,6 +1,7 @@
 package goqonto
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"reflect"
@@ -49,7 +50,7 @@ func TestMembershipsGet(t *testing.T) {
 		PerPage:     10,
 	}
 
-	memberships, resp, err := client.Memberships.List(ctx, params)
+	memberships, resp, err := client.Memberships.List(context.Background(), params)
 	if err != nil {
 		t.Errorf("Memberships.Get returned error: %v", err)
 	}
@@ -80,10 +81,10 @@ func TestMembershipsGet(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(memberships, expectedMembers) {
-		t.Errorf("Memberships.Get returned %+v, expected %+v", memberships, expectedMembers)
+		t.Errorf("Memberships.Get \n returned: %+v\n expected: %+v\n", memberships, expectedMembers)
 	}
 
 	if !reflect.DeepEqual(resp.Meta, expectedMeta) {
-		t.Errorf("Memberships.Get returned %+v, expected %+v", resp, expectedMeta)
+		t.Errorf("Memberships.Get \n returned: %+v\n expected: %+v\n", resp, expectedMeta)
 	}
 }
