@@ -2,7 +2,6 @@ package goqonto
 
 import (
 	"context"
-	"encoding/json"
 )
 
 // membershipsBasePath Qonto API Memberships Endpoint
@@ -39,16 +38,6 @@ var _ MembershipsService = &MembershipsServiceOp{}
 // membershipsRoot root key in the JSON response for memberships
 type membershipsRoot struct {
 	Memberships []Membership `json:"memberships"`
-}
-
-// Convert Membership to a string
-// TODO: shouldn't Panic here
-func (m Membership) String() string {
-	bytes, err := json.Marshal(m)
-	if err != nil {
-		panic(err)
-	}
-	return string(bytes)
 }
 
 // List all the memberships
