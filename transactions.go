@@ -3,6 +3,7 @@ package goqonto
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"time"
 )
 
@@ -76,7 +77,7 @@ type transactionsRoot struct {
 // List all the transactions for a given Org.Slug and BankAccount.IBAN
 func (t *TransactionsServiceOp) List(ctx context.Context, trxOpt *TransactionsOptions) ([]Transaction, *Response, error) {
 
-	req, err := t.client.NewRequest(ctx, "GET", transactionsBasePath, trxOpt)
+	req, err := t.client.NewRequest(ctx, http.MethodGet, transactionsBasePath, trxOpt)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -104,7 +105,7 @@ func (t *TransactionsServiceOp) Get(ctx context.Context, id string) (*Transactio
 
 	path := fmt.Sprintf("%s/%s", transactionsBasePath, id)
 
-	req, err := t.client.NewRequest(ctx, "GET", path, nil)
+	req, err := t.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
 		return nil, nil, err
 	}

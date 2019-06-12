@@ -3,6 +3,7 @@ package goqonto
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"time"
 )
 
@@ -43,7 +44,7 @@ func (a *AttachmentsServiceOp) Get(ctx context.Context, id string) (*Attachment,
 
 	path := fmt.Sprintf("%s/%s", attachmentsBasePath, id)
 
-	req, err := a.client.NewRequest(ctx, "GET", path, nil)
+	req, err := a.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
 		return nil, nil, err
 	}

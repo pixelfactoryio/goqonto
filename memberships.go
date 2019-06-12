@@ -2,6 +2,7 @@ package goqonto
 
 import (
 	"context"
+	"net/http"
 )
 
 // membershipsBasePath Qonto API Memberships Endpoint
@@ -43,7 +44,7 @@ type membershipsRoot struct {
 // List all the memberships
 func (m *MembershipsServiceOp) List(ctx context.Context, memOpt *MembershipsOptions) ([]Membership, *Response, error) {
 
-	req, err := m.client.NewRequest(ctx, "GET", membershipsBasePath, memOpt)
+	req, err := m.client.NewRequest(ctx, http.MethodGet, membershipsBasePath, memOpt)
 	if err != nil {
 		return nil, nil, err
 	}

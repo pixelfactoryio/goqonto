@@ -3,6 +3,7 @@ package goqonto
 import (
 	"context"
 	"fmt"
+	"net/http"
 )
 
 // organizationsBasePath Qonto API Organizations Endpoint
@@ -46,13 +47,12 @@ type organizationsRoot struct {
 	Organization Organization `json:"organization"`
 }
 
-
 // Get Organization
 func (o *OrganizationsServiceOp) Get(ctx context.Context, id string) (*Organization, *Response, error) {
 
 	path := fmt.Sprintf("%s/%s", organizationsBasePath, id)
 
-	req, err := o.client.NewRequest(ctx, "GET", path, nil)
+	req, err := o.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
 		return nil, nil, err
 	}
