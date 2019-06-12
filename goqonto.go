@@ -19,6 +19,7 @@ type Client struct {
 	Organizations OrganizationsService
 	Transactions  TransactionsService
 	Memberships   MembershipsService
+	Attachments   AttachmentsService
 
 	// Optional function callback
 	onRequestCompleted RequestCompletionCallback
@@ -83,6 +84,7 @@ func New(httpClient *http.Client, apiURL string) *Client {
 	c.Organizations = &OrganizationsServiceOp{client: c}
 	c.Transactions = &TransactionsServiceOp{client: c}
 	c.Memberships = &MembershipsServiceOp{client: c}
+	c.Attachments = &AttachmentsServiceOp{client: c}
 
 	return c
 }

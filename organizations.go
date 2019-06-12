@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-// transactionsBasePath Qonto API Organizations Endpoint
+// organizationsBasePath Qonto API Organizations Endpoint
 const organizationsBasePath = "v2/organizations"
 
 // OrganizationsService interface
