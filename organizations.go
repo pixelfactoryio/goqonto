@@ -44,7 +44,7 @@ var _ OrganizationsService = &OrganizationsServiceOp{}
 
 // organizationsRoot root key in the JSON response for organizations
 type organizationsRoot struct {
-	Organization Organization `json:"organization"`
+	Organization *Organization `json:"organization"`
 }
 
 // Get Organization
@@ -60,8 +60,8 @@ func (o *OrganizationsServiceOp) Get(ctx context.Context, id string) (*Organizat
 	root := new(organizationsRoot)
 	resp, err := o.client.Do(ctx, req, root)
 	if err != nil {
-		return nil, nil, err
+		return nil, resp, err
 	}
 
-	return &root.Organization, resp, nil
+	return root.Organization, resp, nil
 }

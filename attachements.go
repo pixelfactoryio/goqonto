@@ -36,7 +36,7 @@ var _ AttachmentsService = &AttachmentsServiceOp{}
 
 // attachmentsRoot root key in the JSON response for attachments
 type attachmentsRoot struct {
-	Attachment Attachment `json:"attachment"`
+	Attachment *Attachment `json:"attachment"`
 }
 
 // Get Attachment
@@ -52,8 +52,8 @@ func (a *AttachmentsServiceOp) Get(ctx context.Context, id string) (*Attachment,
 	root := new(attachmentsRoot)
 	resp, err := a.client.Do(ctx, req, root)
 	if err != nil {
-		return nil, nil, err
+		return nil, resp, err
 	}
 
-	return &root.Attachment, resp, nil
+	return root.Attachment, resp, nil
 }

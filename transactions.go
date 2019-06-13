@@ -113,7 +113,7 @@ func (t *TransactionsServiceOp) Get(ctx context.Context, id string) (*Transactio
 	v := new(Transaction)
 	resp, err := t.client.Do(ctx, req, v)
 	if err != nil {
-		return nil, nil, err
+		return nil, resp, err
 	}
 
 	return v, resp, nil
