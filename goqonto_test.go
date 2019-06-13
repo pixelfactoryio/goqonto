@@ -1,7 +1,6 @@
 package goqonto
 
 import (
-	"context"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -9,12 +8,8 @@ import (
 )
 
 var (
-	mux *http.ServeMux
-
-	ctx = context.TODO()
-
+	mux    *http.ServeMux
 	client *Client
-
 	server *httptest.Server
 )
 
@@ -23,8 +18,8 @@ func setup() {
 	server = httptest.NewServer(mux)
 
 	client = New(nil, "")
-	serverUrl, _ := url.Parse(server.URL)
-	client.BaseURL = serverUrl
+	serverURL, _ := url.Parse(server.URL)
+	client.BaseURL = serverURL
 }
 
 func teardown() {
@@ -33,6 +28,6 @@ func teardown() {
 
 func testMethod(t *testing.T, r *http.Request, expected string) {
 	if expected != r.Method {
-		t.Errorf("Request method = %v, expected %v", r.Method, expected)
+		t.Errorf("Request method \n returned: %v\n expected %v\n", r.Method, expected)
 	}
 }

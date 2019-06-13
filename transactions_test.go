@@ -1,6 +1,7 @@
 package goqonto
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"reflect"
@@ -98,7 +99,7 @@ func TestTransactionsGet(t *testing.T) {
 		IBAN: "FR761679800001000000123456",
 	}
 
-	transactions, resp, err := client.Transactions.List(ctx, params)
+	transactions, resp, err := client.Transactions.List(context.Background(), params)
 	if err != nil {
 		t.Errorf("Transactions.Get returned error: %v", err)
 	}
@@ -180,10 +181,10 @@ func TestTransactionsGet(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(transactions, expectedTrx) {
-		t.Errorf("Transactions.Get returned %+v, expected %+v", transactions, expectedTrx)
+		t.Errorf("Transactions.Get \n returned: %+v\n expected: %+v\n", transactions, expectedTrx)
 	}
 
 	if !reflect.DeepEqual(resp.Meta, expectedMeta) {
-		t.Errorf("Transactions.Get returned %+v, expected %+v", resp, expectedMeta)
+		t.Errorf("Transactions.Get \n returned: %+v\n expected: %+v\n", resp, expectedMeta)
 	}
 }

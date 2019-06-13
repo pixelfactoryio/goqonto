@@ -1,6 +1,7 @@
 package goqonto
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"reflect"
@@ -33,7 +34,7 @@ func TestAttachmentsGet(t *testing.T) {
 		}
 	})
 
-	attachment, _, err := client.Attachments.Get(ctx, "1ec373a5-e30d-4a70-948d-c8d49e4a4d31")
+	attachment, _, err := client.Attachments.Get(context.Background(), "1ec373a5-e30d-4a70-948d-c8d49e4a4d31")
 	if err != nil {
 		t.Errorf("Attachments.Get returned error: %v", err)
 	}

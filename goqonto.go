@@ -49,16 +49,6 @@ type metaRoot struct {
 	Meta ResponseMeta `json:"meta"`
 }
 
-// Convert ResponseMeta to a string
-// TODO: shouldn't Panic here
-func (m ResponseMeta) String() string {
-	bytes, err := json.Marshal(m)
-	if err != nil {
-		panic(err)
-	}
-	return string(bytes)
-}
-
 // An ErrorResponse reports the error caused by an API request
 type ErrorResponse struct {
 	// HTTP response that caused this error

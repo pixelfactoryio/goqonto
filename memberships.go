@@ -2,7 +2,7 @@ package goqonto
 
 import (
 	"context"
-	"encoding/json"
+	"net/http"
 )
 
 // membershipsBasePath Qonto API Memberships Endpoint
@@ -41,20 +41,10 @@ type membershipsRoot struct {
 	Memberships []Membership `json:"memberships"`
 }
 
-// Convert Membership to a string
-// TODO: shouldn't Panic here
-func (m Membership) String() string {
-	bytes, err := json.Marshal(m)
-	if err != nil {
-		panic(err)
-	}
-	return string(bytes)
-}
-
 // List all the memberships
 func (m *MembershipsServiceOp) List(ctx context.Context, memOpt *MembershipsOptions) ([]Membership, *Response, error) {
 
-	req, err := m.client.NewRequest(ctx, "GET", membershipsBasePath, memOpt)
+	req, err := m.client.NewRequest(ctx, http.MethodGet, membershipsBasePath, memOpt)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -67,7 +57,7 @@ func (m *MembershipsServiceOp) List(ctx context.Context, memOpt *MembershipsOpti
 	root := new(respWithMeta)
 	resp, err := m.client.Do(ctx, req, root)
 	if err != nil {
-		return nil, nil, err
+		return nil, resp, err
 	}
 
 	if m := &root.metaRoot; m != nil {
