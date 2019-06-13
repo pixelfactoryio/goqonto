@@ -51,12 +51,4 @@ run_govet() {
   fi
 }
 
-run_unit_tests() {
-  if [ -z "$NOTEST" ]
-  then
-    log_info 'Running tests...'
-    go test ./...
-  fi
-}
-
 main
