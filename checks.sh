@@ -5,7 +5,6 @@ main() {
   run_gofmt
   run_golint
   run_govet
-  run_unit_tests
 }
 
 function log_info() {
