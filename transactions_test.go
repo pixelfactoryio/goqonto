@@ -1,7 +1,6 @@
 package goqonto
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 	"reflect"
@@ -118,15 +117,14 @@ func TestTransactionsGet(t *testing.T) {
 		}
 	})
 
-	trx, _, err := client.Transactions.Get(context.Background(), "mycompany-bank-account-1-transaction-491")
+	got, _, err := client.Transactions.Get(ctx, "mycompany-bank-account-1-transaction-491")
 	if err != nil {
 		t.Errorf("Transactions.Get returned error: %v", err)
 	}
 
-	if !reflect.DeepEqual(trx, &trx1) {
-		t.Errorf("Organizations.Get \n returned: %+v\n expected: %+v\n", trx, trx1)
+	if !reflect.DeepEqual(got, &trx1) {
+		t.Errorf("Organizations.Get \n got %v\n want %v\n", got, trx1)
 	}
-
 }
 
 func TestTransactionsList(t *testing.T) {
@@ -219,29 +217,52 @@ func TestTransactionsList(t *testing.T) {
 		IBAN: "FR761679800001000000123456",
 	}
 
-	transactions, resp, err := client.Transactions.List(context.Background(), params)
+	got, resp, err := client.Transactions.List(ctx, params)
 	if err != nil {
 		t.Errorf("Transactions.Get returned error: %v", err)
 	}
 
-	expectedTrx := new(transactionsRoot).Transactions
-	expectedTrx = append(expectedTrx, trx1)
-	expectedTrx = append(expectedTrx, trx2)
+	want := new(transactionsRoot).Transactions
+	want = append(want, trx1)
+	want = append(want, trx2)
 
-	expectedMeta := &ResponseMeta{
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Transactions.Get \n got %v\n want %v\n", got, want)
+	}
+
+	testResponseMeta(t, resp.Meta, &ResponseMeta{
 		CurrentPage: 2,
 		NextPage:    3,
 		PrevPage:    1,
 		TotalPages:  3,
 		TotalCount:  30,
 		PerPage:     10,
+	})
+}
+
+func TestTransactionsGet_Error(t *testing.T) {
+	setup()
+	defer teardown()
+
+	mux.HandleFunc(fmt.Sprintf("/%s/foo", attachmentsBasePath), func(w http.ResponseWriter, r *http.Request) {
+		testMethod(t, r, http.MethodGet)
+
+		_, err := fmt.Fprint(w, "")
+		if err != nil {
+			t.Errorf("Unable to write response error: %v", err)
+		}
+	})
+
+	got, resp, err := client.Transactions.List(ctx, &TransactionsOptions{})
+	if err.Error() == "" {
+		t.Errorf("Expected non-empty ErrorResponse.Error()")
 	}
 
-	if !reflect.DeepEqual(transactions, expectedTrx) {
-		t.Errorf("Transactions.Get \n returned: %+v\n expected: %+v\n", transactions, expectedTrx)
+	if resp.StatusCode != http.StatusNotFound {
+		t.Errorf("Expected 404 Status")
 	}
 
-	if !reflect.DeepEqual(resp.Meta, expectedMeta) {
-		t.Errorf("Transactions.Get \n returned: %+v\n expected: %+v\n", resp, expectedMeta)
+	if got != nil {
+		t.Errorf("Expected empty body")
 	}
 }

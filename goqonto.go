@@ -70,7 +70,7 @@ type ErrorResponse struct {
 // NewClient returns new Qonto API Client
 func NewClient(httpClient *http.Client) *Client {
 	if httpClient == nil {
-		httpClient = http.DefaultClient
+		httpClient = &http.Client{}
 	}
 
 	baseURL, _ := url.Parse(defaultBaseURL)
@@ -113,6 +113,14 @@ func SetBaseURL(bu string) ClientOpt {
 		}
 
 		c.BaseURL = u
+		return nil
+	}
+}
+
+// SetUserAgent is a client option for setting the user agent.
+func SetUserAgent(ua string) ClientOpt {
+	return func(c *Client) error {
+		c.UserAgent = fmt.Sprintf("%s %s", ua, c.UserAgent)
 		return nil
 	}
 }
