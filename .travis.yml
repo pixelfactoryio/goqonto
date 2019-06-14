@@ -14,7 +14,13 @@ branches:
 
 before_install:
   - go get -v golang.org/x/lint/golint
+  - go get golang.org/x/tools/cmd/cover
+  - go get github.com/mattn/goveralls
 
 script:
   - ./checks.sh
   - go test -v ./...
+
+after_success:
+  - go test -v -covermode=count -coverprofile=coverage.out 
+  - $GOPATH/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN

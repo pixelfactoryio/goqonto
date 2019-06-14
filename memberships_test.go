@@ -1,7 +1,6 @@
 package goqonto
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 	"reflect"
@@ -50,7 +49,7 @@ func TestMembershipsGet(t *testing.T) {
 		PerPage:     10,
 	}
 
-	memberships, resp, err := client.Memberships.List(context.Background(), params)
+	got, resp, err := client.Memberships.List(ctx, params)
 	if err != nil {
 		t.Errorf("Memberships.Get returned error: %v", err)
 	}
@@ -67,24 +66,47 @@ func TestMembershipsGet(t *testing.T) {
 		LastName: "Brown",
 	}
 
-	expectedMembers := new(membershipsRoot).Memberships
-	expectedMembers = append(expectedMembers, member1)
-	expectedMembers = append(expectedMembers, member2)
+	want := new(membershipsRoot).Memberships
+	want = append(want, member1)
+	want = append(want, member2)
 
-	expectedMeta := &ResponseMeta{
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Memberships.Get \n got %v\n want %v\n", got, want)
+	}
+
+	testResponseMeta(t, resp.Meta, &ResponseMeta{
 		CurrentPage: 1,
 		NextPage:    0,
 		PrevPage:    0,
 		TotalPages:  1,
 		TotalCount:  2,
 		PerPage:     10,
+	})
+}
+
+func TestMembershipsGet_Error(t *testing.T) {
+	setup()
+	defer teardown()
+
+	mux.HandleFunc(fmt.Sprintf("/%s/foo", attachmentsBasePath), func(w http.ResponseWriter, r *http.Request) {
+		testMethod(t, r, http.MethodGet)
+
+		_, err := fmt.Fprint(w, "")
+		if err != nil {
+			t.Errorf("Unable to write response error: %v", err)
+		}
+	})
+
+	got, resp, err := client.Memberships.List(ctx, &MembershipsOptions{})
+	if err.Error() == "" {
+		t.Errorf("Expected non-empty ErrorResponse.Error()")
 	}
 
-	if !reflect.DeepEqual(memberships, expectedMembers) {
-		t.Errorf("Memberships.Get \n returned: %+v\n expected: %+v\n", memberships, expectedMembers)
+	if resp.StatusCode != http.StatusNotFound {
+		t.Errorf("Expected 404 Status")
 	}
 
-	if !reflect.DeepEqual(resp.Meta, expectedMeta) {
-		t.Errorf("Memberships.Get \n returned: %+v\n expected: %+v\n", resp, expectedMeta)
+	if got != nil {
+		t.Errorf("Expected empty body")
 	}
 }

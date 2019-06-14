@@ -1,4 +1,5 @@
 [![Travis branch](https://img.shields.io/travis/amine7536/goqonto/v2.svg?style=flat-square)](https://travis-ci.org/amine7536/goqonto)
+[![Coverage Status](https://coveralls.io/repos/github/amine7536/goqonto/badge.svg)](https://coveralls.io/github/amine7536/goqonto)
 
 # GoQonto
 Qonto API (v2) Go client

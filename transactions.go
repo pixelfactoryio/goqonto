@@ -90,7 +90,7 @@ func (t *TransactionsServiceOp) List(ctx context.Context, trxOpt *TransactionsOp
 	root := new(respWithMeta)
 	resp, err := t.client.Do(ctx, req, root)
 	if err != nil {
-		return nil, nil, err
+		return nil, resp, err
 	}
 
 	if m := &root.metaRoot; m != nil {
