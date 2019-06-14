@@ -11,10 +11,18 @@ import (
 	"net/url"
 )
 
+const (
+	apiVersion     = "v2"
+	defaultBaseURL = "https://thirdparty.qonto.eu/" + apiVersion
+	userAgent      = "goqonto/" + apiVersion
+	mediaType      = "application/json"
+)
+
 // Client Qonto API Client struct
 type Client struct {
-	client  *http.Client
-	BaseURL *url.URL
+	client    *http.Client
+	BaseURL   *url.URL
+	UserAgent string
 
 	Organizations OrganizationsService
 	Transactions  TransactionsService
@@ -59,24 +67,54 @@ type ErrorResponse struct {
 	Message string `json:"message"`
 }
 
-// New returns new Qonto API Client
-func New(httpClient *http.Client, apiURL string) *Client {
+// NewClient returns new Qonto API Client
+func NewClient(httpClient *http.Client) *Client {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
 	}
 
-	baseURL, _ := url.Parse(apiURL)
+	baseURL, _ := url.Parse(defaultBaseURL)
 
 	c := &Client{
-		client:  httpClient,
-		BaseURL: baseURL,
+		client:    httpClient,
+		BaseURL:   baseURL,
+		UserAgent: userAgent,
 	}
+
 	c.Organizations = &OrganizationsServiceOp{client: c}
 	c.Transactions = &TransactionsServiceOp{client: c}
 	c.Memberships = &MembershipsServiceOp{client: c}
 	c.Attachments = &AttachmentsServiceOp{client: c}
 
 	return c
+}
+
+// ClientOpt are options for New.
+type ClientOpt func(*Client) error
+
+// New returns a new Qonto ThirdParty API client instance.
+func New(httpClient *http.Client, opts ...ClientOpt) (*Client, error) {
+	c := NewClient(httpClient)
+	for _, opt := range opts {
+		if err := opt(c); err != nil {
+			return nil, err
+		}
+	}
+
+	return c, nil
+}
+
+// SetBaseURL is a client option for setting the base URL.
+func SetBaseURL(bu string) ClientOpt {
+	return func(c *Client) error {
+		u, err := url.Parse(bu)
+		if err != nil {
+			return err
+		}
+
+		c.BaseURL = u
+		return nil
+	}
 }
 
 // NewRequest prepare Request
@@ -101,9 +139,16 @@ func (c *Client) NewRequest(ctx context.Context, method, urlStr string, body int
 		return nil, err
 	}
 
-	req.Header.Add("content-type", "application/json")
+	req.Header.Add("Content-Type", mediaType)
+	req.Header.Add("Accept", mediaType)
+	req.Header.Add("User-Agent", c.UserAgent)
 
 	return req, nil
+}
+
+// OnRequestCompleted sets request completion callback
+func (c *Client) OnRequestCompleted(rc RequestCompletionCallback) {
+	c.onRequestCompleted = rc
 }
 
 func newResponse(r *http.Response) *Response {
