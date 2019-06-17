@@ -1,5 +1,5 @@
 [![Travis branch](https://img.shields.io/travis/pixelfactoryio/goqonto/v2.svg?style=flat-square)](https://travis-ci.org/pixelfactoryio/goqonto)
-[![Coveralls github](https://img.shields.io/coveralls/github/pixelfactoryio/goqonto.svg)](https://coveralls.io/github/pixelfactoryio/goqonto)
+[![Coveralls github](https://img.shields.io/coveralls/github/pixelfactoryio/goqonto.svg?style=flat-square)](https://coveralls.io/github/pixelfactoryio/goqonto)
 
 # GoQonto
 Qonto API (v2) Go client
