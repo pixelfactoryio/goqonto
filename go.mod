@@ -1,3 +1,3 @@
-module github.com/amine7536/goqonto
+module github.com/pixelfactoryio/goqonto
 
 go 1.12
