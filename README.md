@@ -1,22 +1,22 @@
-[![Travis branch](https://img.shields.io/travis/amine7536/goqonto/v2.svg?style=flat-square)](https://travis-ci.org/amine7536/goqonto)
-[![Coverage Status](https://coveralls.io/repos/github/amine7536/goqonto/badge.svg)](https://coveralls.io/github/amine7536/goqonto)
+[![Travis branch](https://img.shields.io/travis/pixelfactoryio/goqonto/v2.svg?style=flat-square)](https://travis-ci.org/pixelfactoryio/goqonto)
+[![Coverage Status](https://coveralls.io/repos/github/pixelfactoryio/goqonto/badge.svg)](https://coveralls.io/github/pixelfactoryio/goqonto)
 
 # GoQonto
 Qonto API (v2) Go client
 
 ## Installation
 
-The import path for the package is gopkg.in/amine7536/goqonto.v2
+The import path for the package is gopkg.in/pixelfactoryio/goqonto.v2
 
 To install it, run:
 
 ```bash
-go get gopkg.in/amine7536/goqonto.v2
+go get gopkg.in/pixelfactoryio/goqonto.v2
 ```
 
 ## API documentation
 
-Package Documentation is located at : https://godoc.org/gopkg.in/amine7536/goqonto.v2
+Package Documentation is located at : https://godoc.org/gopkg.in/pixelfactoryio/goqonto.v2
 
 Qonto API v2 documentation is located at : https://api-doc.qonto.eu/2.0/welcome
 
@@ -32,7 +32,7 @@ import (
 	"net/http"
 	"os"
 
-	"gopkg.in/amine7536/goqonto.v2"
+	"gopkg.in/pixelfactoryio/goqonto.v2"
 )
 
 type AuthTransport struct {
