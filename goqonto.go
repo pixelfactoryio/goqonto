@@ -1,3 +1,4 @@
+// Package goqonto is a Qonto API v2 client for Go
 package goqonto
 
 import (
