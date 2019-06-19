@@ -2,8 +2,8 @@ package goqonto
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
+	"net/http"
 	"time"
 )
 
@@ -74,20 +74,10 @@ type transactionsRoot struct {
 	Transactions []Transaction `json:"transactions"`
 }
 
-// Convert Transaction to a string
-// TODO: shouldn't Panic here
-func (t Transaction) String() string {
-	bytes, err := json.Marshal(t)
-	if err != nil {
-		panic(err)
-	}
-	return string(bytes)
-}
-
 // List all the transactions for a given Org.Slug and BankAccount.IBAN
-func (s *TransactionsServiceOp) List(ctx context.Context, trxOpt *TransactionsOptions) ([]Transaction, *Response, error) {
+func (t *TransactionsServiceOp) List(ctx context.Context, trxOpt *TransactionsOptions) ([]Transaction, *Response, error) {
 
-	req, err := s.client.NewRequest(ctx, "GET", transactionsBasePath, trxOpt)
+	req, err := t.client.NewRequest(ctx, http.MethodGet, transactionsBasePath, trxOpt)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -98,9 +88,9 @@ func (s *TransactionsServiceOp) List(ctx context.Context, trxOpt *TransactionsOp
 	}
 
 	root := new(respWithMeta)
-	resp, err := s.client.Do(ctx, req, root)
+	resp, err := t.client.Do(ctx, req, root)
 	if err != nil {
-		return nil, nil, err
+		return nil, resp, err
 	}
 
 	if m := &root.metaRoot; m != nil {
@@ -111,19 +101,19 @@ func (s *TransactionsServiceOp) List(ctx context.Context, trxOpt *TransactionsOp
 }
 
 // Get a transaction by its id
-func (s *TransactionsServiceOp) Get(ctx context.Context, id string) (*Transaction, *Response, error) {
+func (t *TransactionsServiceOp) Get(ctx context.Context, id string) (*Transaction, *Response, error) {
 
 	path := fmt.Sprintf("%s/%s", transactionsBasePath, id)
 
-	req, err := s.client.NewRequest(ctx, "GET", path, nil)
+	req, err := t.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	v := new(Transaction)
-	resp, err := s.client.Do(ctx, req, v)
+	resp, err := t.client.Do(ctx, req, v)
 	if err != nil {
-		return nil, nil, err
+		return nil, resp, err
 	}
 
 	return v, resp, nil

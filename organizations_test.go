@@ -36,9 +36,10 @@ func TestOrganizationsGet(t *testing.T) {
 		_, err := fmt.Fprint(w, response)
 		if err != nil {
 			t.Errorf("Unable to write response error: %v", err)
-		}	})
+		}
+	})
 
-	orga, _, err := client.Organizations.Get(ctx, "9134")
+	got, _, err := client.Organizations.Get(ctx, "9134")
 	if err != nil {
 		t.Errorf("Organizations.Get returned error: %v", err)
 	}
@@ -54,13 +55,40 @@ func TestOrganizationsGet(t *testing.T) {
 		AuthorizedBalanceCents: 21320,
 	}
 
-	expected := &Organization{
+	want := &Organization{
 		Slug:         "croissant-9134",
 		BankAccounts: []BankAccount{bankAccount},
 	}
 
-	if !reflect.DeepEqual(orga, expected) {
-		t.Errorf("Organizations.Get returned %+v, expected %+v", orga, expected)
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Organizations.Get \n got %v\n want %v\n", got, want)
 	}
 
+}
+
+func TestOrganizationsGet_Error(t *testing.T) {
+	setup()
+	defer teardown()
+
+	mux.HandleFunc(fmt.Sprintf("/%s/foo", attachmentsBasePath), func(w http.ResponseWriter, r *http.Request) {
+		testMethod(t, r, http.MethodGet)
+
+		_, err := fmt.Fprint(w, "")
+		if err != nil {
+			t.Errorf("Unable to write response error: %v", err)
+		}
+	})
+
+	got, resp, err := client.Organizations.Get(ctx, "bar")
+	if err.Error() == "" {
+		t.Errorf("Expected non-empty ErrorResponse.Error()")
+	}
+
+	if resp.StatusCode != http.StatusNotFound {
+		t.Errorf("Expected 404 Status")
+	}
+
+	if got != nil {
+		t.Errorf("Expected empty body")
+	}
 }

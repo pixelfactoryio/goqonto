@@ -1,21 +1,22 @@
-[![Travis branch](https://img.shields.io/travis/amine7536/goqonto/v2.svg?style=flat-square)](https://travis-ci.org/amine7536/goqonto)
+[![Travis branch](https://img.shields.io/travis/pixelfactoryio/goqonto/v2.svg?style=flat-square)](https://travis-ci.org/pixelfactoryio/goqonto)
+[![Coveralls github](https://img.shields.io/coveralls/github/pixelfactoryio/goqonto.svg?style=flat-square)](https://coveralls.io/github/pixelfactoryio/goqonto)
 
 # GoQonto
 Qonto API (v2) Go client
 
 ## Installation
 
-The import path for the package is gopkg.in/amine7536/goqonto.v2
+The import path for the package is gopkg.in/pixelfactoryio/goqonto.v2
 
 To install it, run:
 
 ```bash
-go get gopkg.in/amine7536/goqonto.v2
+go get gopkg.in/pixelfactoryio/goqonto.v2
 ```
 
 ## API documentation
 
-Package Documentation is located at : https://godoc.org/gopkg.in/amine7536/goqonto.v2
+Package Documentation is located at : https://godoc.org/gopkg.in/pixelfactoryio/goqonto.v2
 
 Qonto API v2 documentation is located at : https://api-doc.qonto.eu/2.0/welcome
 
@@ -25,14 +26,13 @@ Qonto API v2 documentation is located at : https://api-doc.qonto.eu/2.0/welcome
 package main
 
 import (
-    "context"
-    "encoding/json"
-    "fmt"
-    "log"
-    "net/http"
-    "os"
+	"context"
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"os"
 
-    "gopkg.in/amine7536/goqonto.v2"
+	"gopkg.in/pixelfactoryio/goqonto.v2"
 )
 
 type AuthTransport struct {
@@ -43,13 +43,11 @@ type AuthTransport struct {
 
 func (t AuthTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	r.Header.Set("Authorization", fmt.Sprintf("%s:%s", t.Slug, t.Secret))
-	r.Header.Set("Hello", "qonto")
 	return t.Transport.RoundTrip(r)
 }
 
 func main() {
 
-	apiURL := os.Getenv("QONTO_API")
 	orgID := os.Getenv("QONTO_ORG_ID")
 	userLogin := os.Getenv("QONTO_USER_LOGIN")
 	userSecretKey := os.Getenv("QONTO_SECRET_KEY")
@@ -62,16 +60,17 @@ func main() {
 		},
 	}
 
-	qonto := goqonto.New(&client, apiURL)
+	qonto := goqonto.NewClient(&client)
 	ctx := context.Background()
 
-	orga, _, err := qonto.Organizations.Get(ctx, orgID)
-	if err != nil {
-		fmt.Println(err)
-		log.Fatalln(err.Error())
+	// Get Organisation
+	orga, resp, err := qonto.Organizations.Get(ctx, orgID)
+	if err != nil && resp.StatusCode != http.StatusOK {
+		panic(err.Error())
 	}
 	prettyPrint(orga)
 
+	// List Transactions
 	params := &goqonto.TransactionsOptions{
 		Slug:   orga.Slug,
 		IBAN:   orga.BankAccounts[0].IBAN,
@@ -79,14 +78,31 @@ func main() {
 	}
 
 	transactions, resp, err := qonto.Transactions.List(ctx, params)
-	if err != nil {
-		log.Fatalln(err.Error())
+	if err != nil && resp.StatusCode != http.StatusOK {
+		panic(err.Error())
 	}
 
 	for _, trx := range transactions {
 		prettyPrint(trx)
 	}
+	prettyPrint(resp.Meta)
 
+	// Get an attachment
+	attachement, resp, err := qonto.Attachments.Get(ctx, "1812345c-cf62-49a0-bbb0-f654321678")
+	if err != nil && resp.StatusCode != http.StatusOK {
+		panic(err.Error())
+	}
+	prettyPrint(attachement)
+
+	// List memberships
+	memberships, resp, err := qonto.Memberships.List(ctx, nil)
+	if err != nil && resp.StatusCode != http.StatusOK {
+		panic(err.Error())
+	}
+
+	for _, member := range memberships {
+		prettyPrint(member)
+	}
 	prettyPrint(resp.Meta)
 
 }
@@ -99,4 +115,6 @@ func prettyPrint(v interface{}) {
 
 ## Credits
 
-This client is heavily inspired by DigitalOcean GoDo : https://github.com/digitalocean/godo
+This client is heavily inspired by :
+- DigitalOcean GoDo : https://github.com/digitalocean/godo
+- Google Go-Github : https://github.com/google/go-github

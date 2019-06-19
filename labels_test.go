@@ -7,25 +7,25 @@ import (
 	"testing"
 )
 
-func TestMembershipsGet(t *testing.T) {
+func TestLabelsGet(t *testing.T) {
 	setup()
 	defer teardown()
 
-	mux.HandleFunc(fmt.Sprintf("/%s", membershipsBasePath), func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc(fmt.Sprintf("/%s", labelsBasePath), func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, http.MethodGet)
 
 		response := `
 		{
-			"memberships": [
+			"labels": [
 			  {
 				"id": "6dbdc8ad-2c89-483c-b696-781c86fa1db4",
-				"first_name": "Bob",
-				"last_name": "Foo"
+				"name": "compta",
+				"parent_id": "88e4a3e6-5012-4c01-8507-362a88712f77"
 			  },
 			  {
 				"id": "88e4a3e6-5012-4c01-8507-362a88712f77",
-				"first_name": "Emmett",
-				"last_name": "Brown"
+				"name": "lunch",
+				"parent_id": ""
 			  }
 			],
 			"meta": {
@@ -44,34 +44,34 @@ func TestMembershipsGet(t *testing.T) {
 		}
 	})
 
-	params := &MembershipsOptions{
+	params := &LabelsOptions{
 		CurrentPage: 1,
 		PerPage:     10,
 	}
 
-	got, resp, err := client.Memberships.List(ctx, params)
+	got, resp, err := client.Labels.List(ctx, params)
 	if err != nil {
-		t.Errorf("Memberships.Get returned error: %v", err)
+		t.Errorf("Labels.Get returned error: %v", err)
 	}
 
-	member1 := Membership{
+	label1 := Label{
 		ID:       "6dbdc8ad-2c89-483c-b696-781c86fa1db4",
-		FistName: "Bob",
-		LastName: "Foo",
+		Name:     "compta",
+		ParentID: "88e4a3e6-5012-4c01-8507-362a88712f77",
 	}
 
-	member2 := Membership{
+	label2 := Label{
 		ID:       "88e4a3e6-5012-4c01-8507-362a88712f77",
-		FistName: "Emmett",
-		LastName: "Brown",
+		Name:     "lunch",
+		ParentID: "",
 	}
 
-	want := new(membershipsRoot).Memberships
-	want = append(want, member1)
-	want = append(want, member2)
+	want := new(labelsRoot).Labels
+	want = append(want, label1)
+	want = append(want, label2)
 
 	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Memberships.Get \n got %v\n want %v\n", got, want)
+		t.Errorf("Labels.Get \n got %v\n want %v\n", got, want)
 	}
 
 	testResponseMeta(t, resp.Meta, &ResponseMeta{
@@ -84,7 +84,7 @@ func TestMembershipsGet(t *testing.T) {
 	})
 }
 
-func TestMembershipsGet_Error(t *testing.T) {
+func TestLabelsGet_Error(t *testing.T) {
 	setup()
 	defer teardown()
 
@@ -97,7 +97,7 @@ func TestMembershipsGet_Error(t *testing.T) {
 		}
 	})
 
-	got, resp, err := client.Memberships.List(ctx, &MembershipsOptions{})
+	got, resp, err := client.Labels.List(ctx, &LabelsOptions{})
 	if err.Error() == "" {
 		t.Errorf("Expected non-empty ErrorResponse.Error()")
 	}

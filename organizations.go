@@ -2,11 +2,11 @@ package goqonto
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
+	"net/http"
 )
 
-// transactionsBasePath Qonto API Organizations Endpoint
+// organizationsBasePath Qonto API Organizations Endpoint
 const organizationsBasePath = "v2/organizations"
 
 // OrganizationsService interface
@@ -44,33 +44,24 @@ var _ OrganizationsService = &OrganizationsServiceOp{}
 
 // organizationsRoot root key in the JSON response for organizations
 type organizationsRoot struct {
-	Organization Organization `json:"organization"`
-}
-
-// Convert Organization to a string
-func (o Organization) String() string {
-	bytes, err := json.Marshal(o)
-	if err != nil {
-		panic(err)
-	}
-	return string(bytes)
+	Organization *Organization `json:"organization"`
 }
 
 // Get Organization
-func (s *OrganizationsServiceOp) Get(ctx context.Context, id string) (*Organization, *Response, error) {
+func (o *OrganizationsServiceOp) Get(ctx context.Context, id string) (*Organization, *Response, error) {
 
 	path := fmt.Sprintf("%s/%s", organizationsBasePath, id)
 
-	req, err := s.client.NewRequest(ctx, "GET", path, nil)
+	req, err := o.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	root := new(organizationsRoot)
-	resp, err := s.client.Do(ctx, req, root)
+	resp, err := o.client.Do(ctx, req, root)
 	if err != nil {
-		return nil, nil, err
+		return nil, resp, err
 	}
 
-	return &root.Organization, resp, nil
+	return root.Organization, resp, nil
 }
