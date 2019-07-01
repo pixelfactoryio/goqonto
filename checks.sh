@@ -23,7 +23,7 @@ function log_hint() {
   printf "$now >>>: $@\n"
 }
 
-run_gofmt() {
+function run_gofmt() {
   GOFMT_FILES=$(gofmt -l .)
   if [[ -n "$GOFMT_FILES" ]]; then
     log_error "gofmt failed for the following files: \n$GOFMT_FILES"
@@ -32,7 +32,7 @@ run_gofmt() {
   fi
 }
 
-run_golint() {
+function run_golint() {
   GOLINT_ERRORS=$(golint ./... | grep -v "Id should be")
   if [[ -n "$GOLINT_ERRORS" ]]; then
     log_error "golint failed for the following reasons: \n$GOLINT_ERRORS"
@@ -41,7 +41,7 @@ run_golint() {
   fi
 }
 
-run_govet() {
+function run_govet() {
   GOVET_ERRORS=$(go vet ./*.go 2>&1)
   if [[ -n "$GOVET_ERRORS" ]]; then
     log_error "go vet failed for the following reasons: \n$GOVET_ERRORS"
