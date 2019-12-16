@@ -11,7 +11,7 @@ The import path for the package is gopkg.in/pixelfactoryio/goqonto.v2
 To install it, run:
 
 ```bash
-go get gopkg.in/pixelfactoryio/goqonto.v2
+go get github.com/pixelfactoryio/goqonto/v2
 ```
 
 ## API documentation
@@ -32,7 +32,7 @@ import (
 	"net/http"
 	"os"
 
-	"gopkg.in/pixelfactoryio/goqonto.v2"
+	"github.com/pixelfactoryio/goqonto/v2"
 )
 
 type AuthTransport struct {
