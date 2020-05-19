@@ -1,16 +1,16 @@
-[![Travis branch](https://img.shields.io/travis/amine7536/goqonto/v1.svg?style=flat-square)](https://travis-ci.org/amine7536/goqonto)
+[![Travis branch](https://img.shields.io/travis/pixelfactoryio/goqonto/v1.svg?style=flat-square)](https://travis-ci.org/pixelfactoryio/goqonto)
 
 # GoQonto
 Qonto API (v1) Go client
 
 ## Installation
 
-The import path for the package is gopkg.in/amine7536/goqonto.v1
+The import path for the package is **github.com/pixelfactoryio/goqonto**
 
 To install it, run:
 
 ```
-go get gopkg.in/amine7536/goqonto.v1
+go get github.com/pixelfactoryio/goqonto
 ```
 
 ## API documentation
@@ -31,7 +31,7 @@ import (
 	"net/http"
 	"os"
 
-	"gopkg.in/amine7536/goqonto.v1"
+	"github.com/pixelfactoryio/goqonto"
 )
 
 type AuthTransport struct {

@@ -1,10 +1,9 @@
 package goqonto
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
-
-	"github.com/amine7536/goqonto/context"
 )
 
 // transactionsBasePath Qonto API Organizations Endpoint
