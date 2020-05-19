@@ -10,6 +10,9 @@ import (
 // transactionsBasePath Qonto API Transactions Endpoint
 const transactionsBasePath = "v2/transactions"
 
+// TransactionsService provides access to the transactions in Qonto API
+type TransactionsService service
+
 // TransactionsOptions Qonto API Transactions query strings
 // https://api-doc.qonto.eu/2.0/transactions/list-transactions
 type TransactionsOptions struct {
@@ -23,14 +26,6 @@ type TransactionsOptions struct {
 	SortBy        string   `json:"sort_by,omitempty"`
 	CurrentPage   int64    `json:"current_page,omitempty"`
 	PerPage       int64    `json:"per_page,omitempty"`
-}
-
-// TransactionsService interface
-// List: list all the transactions
-// Get: get one transaction by id
-type TransactionsService interface {
-	List(context.Context, *TransactionsOptions) ([]Transaction, *Response, error)
-	Get(context.Context, string) (*Transaction, *Response, error)
 }
 
 // Transaction struct
@@ -62,22 +57,15 @@ type Transaction struct {
 	AttachmentRequired bool      `json:"attachment_required,omitempty"`
 }
 
-// TransactionsServiceOp struct used to embed *Client
-type TransactionsServiceOp struct {
-	client *Client
-}
-
-var _ TransactionsService = &TransactionsServiceOp{}
-
 // transactionsRoot root key in the JSON response for transactions
 type transactionsRoot struct {
 	Transactions []Transaction `json:"transactions"`
 }
 
 // List all the transactions for a given Org.Slug and BankAccount.IBAN
-func (t *TransactionsServiceOp) List(ctx context.Context, trxOpt *TransactionsOptions) ([]Transaction, *Response, error) {
+func (s *TransactionsService) List(ctx context.Context, trxOpt *TransactionsOptions) ([]Transaction, *Response, error) {
 
-	req, err := t.client.NewRequest(ctx, http.MethodGet, transactionsBasePath, trxOpt)
+	req, err := s.client.NewRequest(ctx, http.MethodGet, transactionsBasePath, trxOpt)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -88,7 +76,7 @@ func (t *TransactionsServiceOp) List(ctx context.Context, trxOpt *TransactionsOp
 	}
 
 	root := new(respWithMeta)
-	resp, err := t.client.Do(ctx, req, root)
+	resp, err := s.client.Do(ctx, req, root)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -101,17 +89,17 @@ func (t *TransactionsServiceOp) List(ctx context.Context, trxOpt *TransactionsOp
 }
 
 // Get a transaction by its id
-func (t *TransactionsServiceOp) Get(ctx context.Context, id string) (*Transaction, *Response, error) {
+func (s *TransactionsService) Get(ctx context.Context, id string) (*Transaction, *Response, error) {
 
 	path := fmt.Sprintf("%s/%s", transactionsBasePath, id)
 
-	req, err := t.client.NewRequest(ctx, http.MethodGet, path, nil)
+	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	v := new(Transaction)
-	resp, err := t.client.Do(ctx, req, v)
+	resp, err := s.client.Do(ctx, req, v)
 	if err != nil {
 		return nil, resp, err
 	}

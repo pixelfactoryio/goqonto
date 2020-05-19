@@ -21,18 +21,33 @@ const (
 
 // Client Qonto API Client struct
 type Client struct {
-	client    *http.Client
-	BaseURL   *url.URL
+	// HTTP client used to communicate with the API.
+	client *http.Client
+
+	// Base URL for API requests. Defaults to the public Qonto API, but can be
+	// set to a custom domain endpoint. BaseURL should
+	// always be specified with a trailing slash.
+	BaseURL *url.URL
+
+	// User agent used when communicating with the Qonto API.
 	UserAgent string
 
-	Organizations OrganizationsService
-	Transactions  TransactionsService
-	Memberships   MembershipsService
-	Attachments   AttachmentsService
-	Labels        LabelsService
+	// Reuse a single struct instead of allocating one for each service on the heap.
+	common service
+
+	// Services used for talking to different parts of the Qonto API.
+	Organizations *OrganizationsService
+	Transactions  *TransactionsService
+	Memberships   *MembershipsService
+	Attachments   *AttachmentsService
+	Labels        *LabelsService
 
 	// Optional function callback
 	onRequestCompleted RequestCompletionCallback
+}
+
+type service struct {
+	client *Client
 }
 
 // RequestCompletionCallback defines the type of the request callback function
@@ -82,12 +97,13 @@ func NewClient(httpClient *http.Client) *Client {
 		BaseURL:   baseURL,
 		UserAgent: userAgent,
 	}
+	c.common.client = c
 
-	c.Organizations = &OrganizationsServiceOp{client: c}
-	c.Transactions = &TransactionsServiceOp{client: c}
-	c.Memberships = &MembershipsServiceOp{client: c}
-	c.Attachments = &AttachmentsServiceOp{client: c}
-	c.Labels = &LabelsServiceOp{client: c}
+	c.Organizations = (*OrganizationsService)(&c.common)
+	c.Transactions = (*TransactionsService)(&c.common)
+	c.Memberships = (*MembershipsService)(&c.common)
+	c.Attachments = (*AttachmentsService)(&c.common)
+	c.Labels = (*LabelsService)(&c.common)
 
 	return c
 }

@@ -8,17 +8,14 @@ import (
 // labelsBasePath Qonto API Labels Endpoint
 const labelsBasePath = "v2/labels"
 
+// LabelsService provides access to the labels in Qonto API
+type LabelsService service
+
 // LabelsOptions Qonto API Labels query strings
 // https://api-doc.qonto.eu/2.0/labels/list-labels
 type LabelsOptions struct {
 	CurrentPage int64 `json:"current_page,omitempty"`
 	PerPage     int64 `json:"per_page,omitempty"`
-}
-
-// LabelsService interface
-// List: list all the labels
-type LabelsService interface {
-	List(context.Context, *LabelsOptions) ([]Label, *Response, error)
 }
 
 // Label struct
@@ -29,22 +26,15 @@ type Label struct {
 	ParentID string `json:"parent_id"`
 }
 
-// LabelsServiceOp struct used to embed *Client
-type LabelsServiceOp struct {
-	client *Client
-}
-
-var _ LabelsService = &LabelsServiceOp{}
-
 // labelsRoot root key in the JSON response for labels
 type labelsRoot struct {
 	Labels []Label `json:"labels"`
 }
 
 // List all the labels
-func (m *LabelsServiceOp) List(ctx context.Context, memOpt *LabelsOptions) ([]Label, *Response, error) {
+func (s *LabelsService) List(ctx context.Context, memOpt *LabelsOptions) ([]Label, *Response, error) {
 
-	req, err := m.client.NewRequest(ctx, http.MethodGet, labelsBasePath, memOpt)
+	req, err := s.client.NewRequest(ctx, http.MethodGet, labelsBasePath, memOpt)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -55,7 +45,7 @@ func (m *LabelsServiceOp) List(ctx context.Context, memOpt *LabelsOptions) ([]La
 	}
 
 	root := new(respWithMeta)
-	resp, err := m.client.Do(ctx, req, root)
+	resp, err := s.client.Do(ctx, req, root)
 	if err != nil {
 		return nil, resp, err
 	}
