@@ -1,3 +1,3 @@
-module github.com/pixelfactoryio/goqonto/v2
+module github.com/pixelfactoryio/goqonto
 
 go 1.13
