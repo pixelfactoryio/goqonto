@@ -8,17 +8,14 @@ import (
 // membershipsBasePath Qonto API Memberships Endpoint
 const membershipsBasePath = "v2/memberships"
 
+// MembershipsService provides access to to the memberships in Qonto API
+type MembershipsService service
+
 // MembershipsOptions Qonto API Memberships query strings
 // https://api-doc.qonto.eu/2.0/memberships/list-memberships
 type MembershipsOptions struct {
 	CurrentPage int64 `json:"current_page,omitempty"`
 	PerPage     int64 `json:"per_page,omitempty"`
-}
-
-// MembershipsService interface
-// List: list all the memberships
-type MembershipsService interface {
-	List(context.Context, *MembershipsOptions) ([]Membership, *Response, error)
 }
 
 // Membership struct
@@ -29,22 +26,15 @@ type Membership struct {
 	LastName string `json:"last_name"`
 }
 
-// MembershipsServiceOp struct used to embed *Client
-type MembershipsServiceOp struct {
-	client *Client
-}
-
-var _ MembershipsService = &MembershipsServiceOp{}
-
 // membershipsRoot root key in the JSON response for memberships
 type membershipsRoot struct {
 	Memberships []Membership `json:"memberships"`
 }
 
 // List all the memberships
-func (m *MembershipsServiceOp) List(ctx context.Context, memOpt *MembershipsOptions) ([]Membership, *Response, error) {
+func (s *MembershipsService) List(ctx context.Context, memOpt *MembershipsOptions) ([]Membership, *Response, error) {
 
-	req, err := m.client.NewRequest(ctx, http.MethodGet, membershipsBasePath, memOpt)
+	req, err := s.client.NewRequest(ctx, http.MethodGet, membershipsBasePath, memOpt)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -55,7 +45,7 @@ func (m *MembershipsServiceOp) List(ctx context.Context, memOpt *MembershipsOpti
 	}
 
 	root := new(respWithMeta)
-	resp, err := m.client.Do(ctx, req, root)
+	resp, err := s.client.Do(ctx, req, root)
 	if err != nil {
 		return nil, resp, err
 	}

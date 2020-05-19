@@ -10,11 +10,8 @@ import (
 // transactionsBasePath Qonto API Attachments Endpoint
 const attachmentsBasePath = "v2/attachments"
 
-// AttachmentsService interface
-// Get: get attachments details
-type AttachmentsService interface {
-	Get(context.Context, string) (*Attachment, *Response, error)
-}
+// AttachmentsService provides access to the attachements in Qonto API
+type AttachmentsService service
 
 // Attachment struct
 // https://api-doc.qonto.eu/2.0/attachments/show-attachment-1
@@ -27,20 +24,13 @@ type Attachment struct {
 	URL             string    `json:"url"`
 }
 
-// AttachmentsServiceOp struct used to embed *Client
-type AttachmentsServiceOp struct {
-	client *Client
-}
-
-var _ AttachmentsService = &AttachmentsServiceOp{}
-
 // attachmentsRoot root key in the JSON response for attachments
 type attachmentsRoot struct {
 	Attachment *Attachment `json:"attachment"`
 }
 
 // Get Attachment
-func (a *AttachmentsServiceOp) Get(ctx context.Context, id string) (*Attachment, *Response, error) {
+func (a *AttachmentsService) Get(ctx context.Context, id string) (*Attachment, *Response, error) {
 
 	path := fmt.Sprintf("%s/%s", attachmentsBasePath, id)
 
