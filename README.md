@@ -3,6 +3,8 @@
 # GoQonto
 Qonto API (v1) Go client
 
+> WARNING: V1 of this package is not maintained anymore, please consider upgrading to **github.com/pixelfactoryio/goqonto/v2** wich uses the v2 version of Qonto API.
+
 ## Installation
 
 The import path for the package is **github.com/pixelfactoryio/goqonto**
