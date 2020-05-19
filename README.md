@@ -5,7 +5,7 @@
 
 ## Installation
 
-The import path for the package is gopkg.in/pixelfactoryio/goqonto.v2
+The import path for the package is *github.com/pixelfactoryio/goqonto/v2*
 
 To install it, run:
 
@@ -15,7 +15,7 @@ go get github.com/pixelfactoryio/goqonto/v2
 
 ## API documentation
 
-Package Documentation is located at : <https://godoc.org/gopkg.in/pixelfactoryio/goqonto.v2>
+Package Documentation is located at : <https://godoc.org/gopkg.in/pixelfactoryio/goqonto>
 
 Qonto API v2 documentation is located at : <https://api-doc.qonto.eu/2.0/welcome>
 
