@@ -1,5 +1,6 @@
 # GoQonto - Qonto API (v2) Go client
 
+[![GoDoc](https://img.shields.io/static/v1?label=godoc&message=reference&color=blue)](https://pkg.go.dev/github.com/pixelfactoryio/goqonto/v2)
 ![tests](https://github.com/pixelfactoryio/goqonto/workflows/tests/badge.svg?branch=master)
 [![codecov](https://codecov.io/gh/pixelfactoryio/goqonto/branch/master/graph/badge.svg)](https://codecov.io/gh/pixelfactoryio/goqonto)
 
@@ -15,7 +16,7 @@ go get github.com/pixelfactoryio/goqonto/v2
 
 ## API documentation
 
-Package Documentation is located at : <https://godoc.org/gopkg.in/pixelfactoryio/goqonto>
+Package Documentation is located at : <https://pkg.go.dev/github.com/pixelfactoryio/goqonto/v2>
 
 Qonto API v2 documentation is located at : <https://api-doc.qonto.eu/2.0/welcome>
 
