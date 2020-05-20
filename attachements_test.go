@@ -53,11 +53,9 @@ func TestAttachmentsService_Get(t *testing.T) {
 
 	mux.HandleFunc(fmt.Sprintf("/%s/1ec373a5-e30d-4a70-948d-c8d49e4a4d31", attachmentsBasePath), func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, http.MethodGet)
-
-		_, err := fmt.Fprint(w, attachmentFixture)
-		if err != nil {
-			t.Errorf("Unable to write response error: %v", err)
-		}
+		testHeader(t, r, "Accept", mediaType)
+		testHeader(t, r, "Content-Type", mediaType)
+		fmt.Fprint(w, attachmentFixture)
 	})
 
 	got, _, err := client.Attachments.Get(ctx, "1ec373a5-e30d-4a70-948d-c8d49e4a4d31")
@@ -76,18 +74,18 @@ func TestAttachmentsService_Get_Error(t *testing.T) {
 	setup()
 	defer teardown()
 
-	mux.HandleFunc(fmt.Sprintf("/%s/foo", attachmentsBasePath), func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, http.MethodGet)
-
-		_, err := fmt.Fprint(w, "")
-		if err != nil {
-			t.Errorf("Unable to write response error: %v", err)
-		}
+		testHeader(t, r, "Accept", mediaType)
+		testHeader(t, r, "Content-Type", mediaType)
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprint(w, `{ "message": "Not found" }`)
 	})
 
 	got, resp, err := client.Attachments.Get(ctx, "bar")
+
 	if err.Error() == "" {
-		t.Errorf("Expected non-empty ErrorResponse.Error()")
+		t.Errorf("Expected non-empty err.Error()")
 	}
 
 	if resp.StatusCode != http.StatusNotFound {

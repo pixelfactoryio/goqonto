@@ -126,42 +126,16 @@ func TestTransaction_marshall(t *testing.T) {
 
 }
 
-func TestTransactionsService_Get(t *testing.T) {
-	setup()
-	defer teardown()
-
-	mux.HandleFunc(fmt.Sprintf("/%s/mycompany-bank-account-1-transaction-491", transactionsBasePath), func(w http.ResponseWriter, r *http.Request) {
-		testMethod(t, r, http.MethodGet)
-
-		_, err := fmt.Fprint(w, transactionFixture)
-		if err != nil {
-			t.Errorf("Unable to write response error: %v", err)
-		}
-	})
-
-	got, _, err := client.Transactions.Get(ctx, "mycompany-bank-account-1-transaction-491")
-	if err != nil {
-		t.Errorf("Transactions.Get returned error: %v", err)
-	}
-
-	want := &trx1
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Organizations.Get \n got %v\n want %v\n", got, want)
-	}
-}
-
 func TestTransactionsService_List(t *testing.T) {
 	setup()
 	defer teardown()
 
 	mux.HandleFunc(fmt.Sprintf("/%s", transactionsBasePath), func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, http.MethodGet)
-
-		_, err := fmt.Fprint(w, transactionsFixture)
-		if err != nil {
-			t.Errorf("Unable to write response error: %v", err)
-		}
+		testHeader(t, r, "Accept", mediaType)
+		testHeader(t, r, "Content-Type", mediaType)
+		testBody(t, r, `{"slug":"mycompany-9134","iban":"FR761679800001000000123456"}`+"\n")
+		fmt.Fprint(w, transactionsFixture)
 	})
 
 	params := &TransactionsOptions{
@@ -170,14 +144,15 @@ func TestTransactionsService_List(t *testing.T) {
 	}
 
 	got, resp, err := client.Transactions.List(ctx, params)
+
 	if err != nil {
-		t.Errorf("Transactions.Get returned error: %v", err)
+		t.Errorf("Transactions.List returned error: %v", err)
 	}
 
 	want := transactions.Transactions
 
 	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Transactions.Get \n got %v\n want %v\n", got, want)
+		t.Errorf("Transactions.List \n got %v\n want %v\n", got, want)
 	}
 
 	testResponseMeta(t, resp.Meta, &ResponseMeta{
@@ -194,18 +169,18 @@ func TestTransactionsService_List_Error(t *testing.T) {
 	setup()
 	defer teardown()
 
-	mux.HandleFunc(fmt.Sprintf("/%s/foo", transactionsBasePath), func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, http.MethodGet)
-
-		_, err := fmt.Fprint(w, "")
-		if err != nil {
-			t.Errorf("Unable to write response error: %v", err)
-		}
+		testHeader(t, r, "Accept", mediaType)
+		testHeader(t, r, "Content-Type", mediaType)
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprint(w, `{ "message": "Not found" }`)
 	})
 
 	got, resp, err := client.Transactions.List(ctx, &TransactionsOptions{})
+
 	if err.Error() == "" {
-		t.Errorf("Expected non-empty ErrorResponse.Error()")
+		t.Errorf("Expected non-empty err.Error()")
 	}
 
 	if resp.StatusCode != http.StatusNotFound {

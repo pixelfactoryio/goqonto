@@ -67,11 +67,10 @@ func TestLabelsService_List(t *testing.T) {
 
 	mux.HandleFunc(fmt.Sprintf("/%s", labelsBasePath), func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, http.MethodGet)
-
-		_, err := fmt.Fprint(w, labelsFixture)
-		if err != nil {
-			t.Errorf("Unable to write response error: %v", err)
-		}
+		testHeader(t, r, "Accept", mediaType)
+		testHeader(t, r, "Content-Type", mediaType)
+		testBody(t, r, `{"current_page":1,"per_page":10}`+"\n")
+		fmt.Fprint(w, labelsFixture)
 	})
 
 	params := &LabelsOptions{
@@ -104,18 +103,18 @@ func TestLabelsService_List_Error(t *testing.T) {
 	setup()
 	defer teardown()
 
-	mux.HandleFunc(fmt.Sprintf("/%s/foo", labelsBasePath), func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, http.MethodGet)
-
-		_, err := fmt.Fprint(w, "")
-		if err != nil {
-			t.Errorf("Unable to write response error: %v", err)
-		}
+		testHeader(t, r, "Accept", mediaType)
+		testHeader(t, r, "Content-Type", mediaType)
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprint(w, `{ "message": "Not found" }`)
 	})
 
 	got, resp, err := client.Labels.List(ctx, &LabelsOptions{})
+
 	if err.Error() == "" {
-		t.Errorf("Expected non-empty ErrorResponse.Error()")
+		t.Errorf("Expected non-empty err.Error()")
 	}
 
 	if resp.StatusCode != http.StatusNotFound {

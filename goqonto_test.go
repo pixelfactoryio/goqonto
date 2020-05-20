@@ -34,19 +34,33 @@ func teardown() {
 	server.Close()
 }
 
-func testMethod(t *testing.T, r *http.Request, expected string) {
-	if got, want := expected, r.Method; got != want {
-		t.Errorf("Request Method \n got %v\n want %v\n", got, want)
+func testMethod(t *testing.T, r *http.Request, want string) {
+	t.Helper()
+	if got := r.Method; got != want {
+		t.Errorf("Request method: %v, want %v", got, want)
 	}
 }
 
-func testResponseMeta(t *testing.T, got *ResponseMeta, want *ResponseMeta) {
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("ResponseMeta \n got %v\n want %v\n", got, want)
+func testHeader(t *testing.T, r *http.Request, header string, want string) {
+	t.Helper()
+	if got := r.Header.Get(header); got != want {
+		t.Errorf("Header.Get(%q) returned %q, want %q", header, got, want)
+	}
+}
+
+func testBody(t *testing.T, r *http.Request, want string) {
+	t.Helper()
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		t.Errorf("Error reading request body: %v", err)
+	}
+	if got := string(b); got != want {
+		t.Errorf("request Body is %s, want %s", got, want)
 	}
 }
 
 func testURLParseError(t *testing.T, err error) {
+	t.Helper()
 	if err == nil {
 		t.Errorf("Expected error to be returned")
 	}
@@ -56,18 +70,22 @@ func testURLParseError(t *testing.T, err error) {
 }
 
 func testClientDefaultBaseURL(t *testing.T, c *Client) {
+	t.Helper()
 	if got, want := c.BaseURL.String(), defaultBaseURL; got != want {
 		t.Errorf("NewClient BaseURL \n got %v\n want %v\n", got, want)
 	}
 }
 
 func testClientDefaultUserAgent(t *testing.T, c *Client) {
+	t.Helper()
 	if got, want := c.UserAgent, userAgent; got != want {
 		t.Errorf("NewClient UserAgent \n got %v\n want %v\n", got, want)
 	}
 }
 
 func testClientServices(t *testing.T, c *Client) {
+	t.Helper()
+
 	services := []string{
 		"Organizations",
 		"Transactions",
@@ -115,6 +133,13 @@ func testJSONMarshal(t *testing.T, v interface{}, want string) {
 
 	if string(w) != string(j) {
 		t.Errorf("json.Marshal(%q) returned %s, want %s", v, j, w)
+	}
+}
+
+func testResponseMeta(t *testing.T, got *ResponseMeta, want *ResponseMeta) {
+	t.Helper()
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("ResponseMeta \n got %v\n want %v\n", got, want)
 	}
 }
 
@@ -184,9 +209,9 @@ func TestNewRequest_withCustomUserAgent(t *testing.T) {
 
 	req, _ := c.NewRequest(ctx, http.MethodGet, "/foo", nil)
 
-	expected := fmt.Sprintf("%s %s", ua, userAgent)
-	if got := req.Header.Get("User-Agent"); got != expected {
-		t.Errorf("New() UserAgent = %s; expected %s", got, expected)
+	want := fmt.Sprintf("%s %s", ua, userAgent)
+	if got := req.Header.Get("User-Agent"); got != want {
+		t.Errorf("New() UserAgent got %s\n want %s\n", got, want)
 	}
 }
 
@@ -198,9 +223,9 @@ func TestCustomBaseURL(t *testing.T) {
 		t.Fatalf("New() unexpected error: %v", err)
 	}
 
-	expected := baseURL
-	if got := c.BaseURL.String(); got != expected {
-		t.Errorf("New() BaseURL = %s; expected %s", got, expected)
+	want := baseURL
+	if got := c.BaseURL.String(); got != want {
+		t.Errorf("New() BaseURL got %s\n want %s\n", got, want)
 	}
 }
 
@@ -233,9 +258,9 @@ func TestDo(t *testing.T) {
 		t.Fatalf("Do(): %v", err)
 	}
 
-	expected := &foo{"a"}
-	if !reflect.DeepEqual(body, expected) {
-		t.Errorf("Response body = %v, expected %v", body, expected)
+	want := &foo{"a"}
+	if !reflect.DeepEqual(body, want) {
+		t.Errorf("Response body got %v\n want %v\n", body, want)
 	}
 }
 
@@ -285,9 +310,7 @@ func TestDo_completion_callback(t *testing.T) {
 	}
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if m := http.MethodGet; m != r.Method {
-			t.Errorf("Request method = %v, expected %v", r.Method, m)
-		}
+		testMethod(t, r, http.MethodGet)
 		fmt.Fprint(w, `{"A":"a"}`)
 	})
 
@@ -295,6 +318,7 @@ func TestDo_completion_callback(t *testing.T) {
 	body := new(foo)
 	var completedReq *http.Request
 	var completedResp string
+
 	client.OnRequestCompleted(func(req *http.Request, resp *http.Response) {
 		completedReq = req
 		b, err := httputil.DumpResponse(resp, true)
@@ -303,16 +327,19 @@ func TestDo_completion_callback(t *testing.T) {
 		}
 		completedResp = string(b)
 	})
+
 	_, err := client.Do(context.Background(), req, body)
 	if err != nil {
 		t.Fatalf("Do(): %v", err)
 	}
+
 	if !reflect.DeepEqual(req, completedReq) {
-		t.Errorf("Completed request = %v, expected %v", completedReq, req)
+		t.Errorf("Completed request got %v\n want %v\n", completedReq, req)
 	}
-	expected := `{"A":"a"}`
-	if !strings.Contains(completedResp, expected) {
-		t.Errorf("expected response to contain %v, Response = %v", expected, completedResp)
+
+	want := `{"A":"a"}`
+	if !strings.Contains(completedResp, want) {
+		t.Errorf("want response to contain %v, Response = %v", want, completedResp)
 	}
 }
 
@@ -329,12 +356,12 @@ func TestCheckResponse(t *testing.T) {
 		t.Fatalf("Expected error response.")
 	}
 
-	expected := &ErrorResponse{
+	want := &ErrorResponse{
 		Response: res,
 		Message:  "m",
 	}
-	if !reflect.DeepEqual(err, expected) {
-		t.Errorf("Error = %#v, expected %#v", err, expected)
+	if !reflect.DeepEqual(err, want) {
+		t.Errorf("Error got %#v\n want %#v\n", err, want)
 	}
 }
 
@@ -352,11 +379,11 @@ func TestCheckResponse_noBody(t *testing.T) {
 		t.Errorf("Expected error response.")
 	}
 
-	expected := &ErrorResponse{
+	want := &ErrorResponse{
 		Response: res,
 	}
-	if !reflect.DeepEqual(err, expected) {
-		t.Errorf("Error = %#v, expected %#v", err, expected)
+	if !reflect.DeepEqual(err, want) {
+		t.Errorf("Error got %#v\n want %#v\n", err, want)
 	}
 }
 
@@ -364,6 +391,6 @@ func TestErrorResponse_Error(t *testing.T) {
 	res := &http.Response{Request: &http.Request{}}
 	err := ErrorResponse{Message: "m", Response: res}
 	if err.Error() == "" {
-		t.Errorf("Expected non-empty ErrorResponse.Error()")
+		t.Errorf("Expected non-empty err.Error()")
 	}
 }

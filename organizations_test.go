@@ -71,11 +71,9 @@ func TestOrganizationsService_Get(t *testing.T) {
 
 	mux.HandleFunc(fmt.Sprintf("/%s/9134", organizationsBasePath), func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, http.MethodGet)
-
-		_, err := fmt.Fprint(w, organizationFixture)
-		if err != nil {
-			t.Errorf("Unable to write response error: %v", err)
-		}
+		testHeader(t, r, "Accept", mediaType)
+		testHeader(t, r, "Content-Type", mediaType)
+		fmt.Fprint(w, organizationFixture)
 	})
 
 	got, _, err := client.Organizations.Get(ctx, "9134")
@@ -95,18 +93,18 @@ func TestOrganizationsService_Get_Error(t *testing.T) {
 	setup()
 	defer teardown()
 
-	mux.HandleFunc(fmt.Sprintf("/%s/foo", organizationsBasePath), func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, http.MethodGet)
-
-		_, err := fmt.Fprint(w, "")
-		if err != nil {
-			t.Errorf("Unable to write response error: %v", err)
-		}
+		testHeader(t, r, "Accept", mediaType)
+		testHeader(t, r, "Content-Type", mediaType)
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprint(w, `{ "message": "Not found" }`)
 	})
 
-	got, resp, err := client.Organizations.Get(ctx, "bar")
+	got, resp, err := client.Organizations.Get(ctx, "9134")
+
 	if err.Error() == "" {
-		t.Errorf("Expected non-empty ErrorResponse.Error()")
+		t.Errorf("Expected non-empty err.Error()")
 	}
 
 	if resp.StatusCode != http.StatusNotFound {
