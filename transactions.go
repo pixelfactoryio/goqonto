@@ -2,7 +2,6 @@ package goqonto
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -86,23 +85,4 @@ func (s *TransactionsService) List(ctx context.Context, trxOpt *TransactionsOpti
 	}
 
 	return root.Transactions, resp, nil
-}
-
-// Get a transaction by its id
-func (s *TransactionsService) Get(ctx context.Context, id string) (*Transaction, *Response, error) {
-
-	path := fmt.Sprintf("%s/%s", transactionsBasePath, id)
-
-	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	v := new(Transaction)
-	resp, err := s.client.Do(ctx, req, v)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return v, resp, nil
 }
