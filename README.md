@@ -1,7 +1,7 @@
 # GoQonto - Qonto API (v2) Go client
 
-[![Travis branch](https://img.shields.io/travis/pixelfactoryio/goqonto/v2.svg?style=flat-square)](https://travis-ci.org/pixelfactoryio/goqonto)
-[![Coveralls github](https://img.shields.io/coveralls/github/pixelfactoryio/goqonto.svg?style=flat-square)](https://coveralls.io/github/pixelfactoryio/goqonto)
+![tests](https://github.com/pixelfactoryio/goqonto/workflows/tests/badge.svg?branch=master)
+[![codecov](https://codecov.io/gh/pixelfactoryio/goqonto/branch/master/graph/badge.svg)](https://codecov.io/gh/pixelfactoryio/goqonto)
 
 ## Installation
 
