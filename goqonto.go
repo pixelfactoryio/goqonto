@@ -254,13 +254,14 @@ func CheckResponse(r *http.Response) error {
 	if err == nil && len(data) > 0 {
 		err := json.Unmarshal(data, errorResponse)
 		if err != nil {
-			return err
+			errorResponse.Message = string(data)
+			errorResponse.Code = errorResponse.Response.StatusCode
 		}
 	}
 
 	return errorResponse
 }
 
-func (r *ErrorResponse) Error() string {
-	return fmt.Sprintf("%v %v: %d %v", r.Response.Request.Method, r.Response.Request.URL, r.Response.StatusCode, r.Message)
+func (e *ErrorResponse) Error() string {
+	return fmt.Sprintf("%v %v: %d %v", e.Response.Request.Method, e.Response.Request.URL, e.Response.StatusCode, e.Message)
 }
