@@ -33,7 +33,7 @@ type BankAccount struct {
 }
 
 // organizationsRoot root key in the JSON response for organizations
-type organizationsRoot struct {
+type organizationRoot struct {
 	Organization *Organization `json:"organization"`
 }
 
@@ -47,7 +47,7 @@ func (s *OrganizationsService) Get(ctx context.Context, id string) (*Organizatio
 		return nil, nil, err
 	}
 
-	root := new(organizationsRoot)
+	root := new(organizationRoot)
 	resp, err := s.client.Do(ctx, req, root)
 	if err != nil {
 		return nil, resp, err
