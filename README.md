@@ -3,6 +3,7 @@
 [![GoDoc](https://img.shields.io/static/v1?label=godoc&message=reference&color=blue)](https://pkg.go.dev/github.com/pixelfactoryio/goqonto/v2)
 ![tests](https://github.com/pixelfactoryio/goqonto/workflows/tests/badge.svg?branch=master)
 [![codecov](https://codecov.io/gh/pixelfactoryio/goqonto/branch/master/graph/badge.svg)](https://codecov.io/gh/pixelfactoryio/goqonto)
+[![Go Report Card](https://goreportcard.com/badge/github.com/pixelfactoryio/goqonto)](https://goreportcard.com/report/github.com/pixelfactoryio/goqonto)
 
 ## Installation
 
