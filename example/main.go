@@ -10,19 +10,20 @@ import (
 	"github.com/pixelfactoryio/goqonto/v2"
 )
 
+// AuthTransport structs holds company Slug and  Secret key
 type AuthTransport struct {
 	*http.Transport
 	Slug   string
 	Secret string
 }
 
+// RoundTrip set "Authorization" header
 func (t AuthTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	r.Header.Set("Authorization", fmt.Sprintf("%s:%s", t.Slug, t.Secret))
 	return t.Transport.RoundTrip(r)
 }
 
 func main() {
-
 	orgID := os.Getenv("QONTO_ORG_ID")
 	userLogin := os.Getenv("QONTO_USER_LOGIN")
 	userSecretKey := os.Getenv("QONTO_SECRET_KEY")
