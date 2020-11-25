@@ -7,7 +7,7 @@
 
 ## Installation
 
-The import path for the package is *github.com/pixelfactoryio/goqonto/v2*
+The import path for the package is _github.com/pixelfactoryio/goqonto/v2_
 
 To install it, run:
 
@@ -110,7 +110,7 @@ func main() {
 
 func prettyPrint(v interface{}) {
     b, _ := json.MarshalIndent(v, "", "  ")
-    println(string(b))
+    fmt.Println(string(b))
 }
 ```
 
