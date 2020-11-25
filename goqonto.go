@@ -14,7 +14,7 @@ import (
 
 const (
 	apiVersion     = "v2"
-	defaultBaseURL = "https://thirdparty.qonto.eu/" + apiVersion
+	defaultBaseURL = "https://thirdparty.qonto.com/" + apiVersion
 	userAgent      = "goqonto/" + apiVersion
 	mediaType      = "application/json"
 )
