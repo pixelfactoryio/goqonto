@@ -7,5 +7,7 @@ plugins:
     enabled: true
   govet:
     enabled: true
+  duplication:
+    enabled: false
 exclude_paths:
   - example/
