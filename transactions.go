@@ -49,7 +49,7 @@ type Transaction struct {
 	Reference          string    `json:"reference,omitempty"`
 	VatAmount          float64   `json:"vat_amount,omitempty"`
 	VatAmountCents     int       `json:"vat_amount_cents,omitempty"`
-	VatRate            float64   `json:"vat_rate,omitempty,omitempty"`
+	VatRate            float64   `json:"vat_rate,omitempty"`
 	InitiatorID        string    `json:"initiator_id,omitempty"`
 	LabelIds           []string  `json:"label_ids,omitempty"`
 	AttachmentLost     bool      `json:"attachment_lost,omitempty"`
@@ -62,9 +62,9 @@ type transactionsRoot struct {
 }
 
 // List all the transactions for a given Org.Slug and BankAccount.IBAN
-func (s *TransactionsService) List(ctx context.Context, trxOpt *TransactionsOptions) ([]Transaction, *Response, error) {
+func (s *TransactionsService) List(ctx context.Context, opt *TransactionsOptions) ([]Transaction, *Response, error) {
 
-	req, err := s.client.NewRequest(ctx, http.MethodGet, transactionsBasePath, trxOpt)
+	req, err := s.client.NewRequest(ctx, http.MethodGet, transactionsBasePath, opt)
 	if err != nil {
 		return nil, nil, err
 	}

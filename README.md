@@ -64,7 +64,7 @@ func main() {
     qonto := goqonto.NewClient(&client)
     ctx := context.Background()
 
-    // Get Organisation
+    // Get Organization
     orga, resp, err := qonto.Organizations.Get(ctx, orgID)
     if err != nil && resp.StatusCode != http.StatusOK {
         panic(err.Error())

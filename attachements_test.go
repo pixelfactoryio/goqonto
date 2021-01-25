@@ -51,12 +51,14 @@ func TestAttachmentsService_Get(t *testing.T) {
 	setup()
 	defer teardown()
 
-	mux.HandleFunc(fmt.Sprintf("/%s/1ec373a5-e30d-4a70-948d-c8d49e4a4d31", attachmentsBasePath), func(w http.ResponseWriter, r *http.Request) {
-		testMethod(t, r, http.MethodGet)
-		testHeader(t, r, "Accept", mediaType)
-		testHeader(t, r, "Content-Type", mediaType)
-		fmt.Fprint(w, attachmentFixture)
-	})
+	mux.HandleFunc(
+		fmt.Sprintf("/%s/1ec373a5-e30d-4a70-948d-c8d49e4a4d31", attachmentsBasePath),
+		func(w http.ResponseWriter, r *http.Request) {
+			testMethod(t, r, http.MethodGet)
+			testHeader(t, r, "Accept", mediaType)
+			testHeader(t, r, "Content-Type", mediaType)
+			fmt.Fprint(w, attachmentFixture)
+		})
 
 	got, _, err := client.Attachments.Get(ctx, "1ec373a5-e30d-4a70-948d-c8d49e4a4d31")
 	if err != nil {

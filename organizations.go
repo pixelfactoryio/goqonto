@@ -9,7 +9,7 @@ import (
 // organizationsBasePath Qonto API Organizations Endpoint
 const organizationsBasePath = "v2/organizations"
 
-// OrganizationsService provides access to the organisations in Qonto API
+// OrganizationsService provides access to the organizations in Qonto API
 type OrganizationsService service
 
 // Organization struct

@@ -32,9 +32,9 @@ type membershipsRoot struct {
 }
 
 // List all the memberships
-func (s *MembershipsService) List(ctx context.Context, memOpt *MembershipsOptions) ([]Membership, *Response, error) {
+func (s *MembershipsService) List(ctx context.Context, opt *MembershipsOptions) ([]Membership, *Response, error) {
 
-	req, err := s.client.NewRequest(ctx, http.MethodGet, membershipsBasePath, memOpt)
+	req, err := s.client.NewRequest(ctx, http.MethodGet, membershipsBasePath, opt)
 	if err != nil {
 		return nil, nil, err
 	}

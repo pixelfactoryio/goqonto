@@ -170,7 +170,11 @@ func TestNewRequest(t *testing.T) {
 	inURL := "v2/foo"
 	outURL := defaultBaseURL + "/foo"
 
-	inBody := &TransactionsOptions{Slug: "mycompany-9134", IBAN: "FR761679800001000000123456", Status: []string{"completed"}}
+	inBody := &TransactionsOptions{
+		Slug:   "mycompany-9134",
+		IBAN:   "FR761679800001000000123456",
+		Status: []string{"completed"},
+	}
 	outBody := `{"slug":"mycompany-9134","iban":"FR761679800001000000123456","status":["completed"]}` + "\n"
 
 	req, _ := c.NewRequest(ctx, http.MethodGet, inURL, inBody)
@@ -190,6 +194,18 @@ func TestNewRequest(t *testing.T) {
 	userAgent := req.Header.Get("User-Agent")
 	if got, want := c.UserAgent, userAgent; got != want {
 		t.Errorf("NewRequest() \n got %v\n want %v\n", got, want)
+	}
+}
+
+func TestNewRequest_badBody(t *testing.T) {
+	c := NewClient(nil)
+
+	inURL := "v2/foo"
+	badBody := make(chan struct{})
+
+	_, err := c.NewRequest(ctx, http.MethodGet, inURL, badBody)
+	if err == nil {
+		t.Errorf("Expected error to be returned")
 	}
 }
 
