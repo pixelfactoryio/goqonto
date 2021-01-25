@@ -170,7 +170,11 @@ func TestNewRequest(t *testing.T) {
 	inURL := "v2/foo"
 	outURL := defaultBaseURL + "/foo"
 
-	inBody := &TransactionsOptions{Slug: "mycompany-9134", IBAN: "FR761679800001000000123456", Status: []string{"completed"}}
+	inBody := &TransactionsOptions{
+		Slug:   "mycompany-9134",
+		IBAN:   "FR761679800001000000123456",
+		Status: []string{"completed"},
+	}
 	outBody := `{"slug":"mycompany-9134","iban":"FR761679800001000000123456","status":["completed"]}` + "\n"
 
 	req, _ := c.NewRequest(ctx, http.MethodGet, inURL, inBody)

@@ -49,7 +49,7 @@ type Transaction struct {
 	Reference          string    `json:"reference,omitempty"`
 	VatAmount          float64   `json:"vat_amount,omitempty"`
 	VatAmountCents     int       `json:"vat_amount_cents,omitempty"`
-	VatRate            float64   `json:"vat_rate,omitempty,omitempty"`
+	VatRate            float64   `json:"vat_rate,omitempty"`
 	InitiatorID        string    `json:"initiator_id,omitempty"`
 	LabelIds           []string  `json:"label_ids,omitempty"`
 	AttachmentLost     bool      `json:"attachment_lost,omitempty"`
