@@ -26,21 +26,18 @@ jobs:
         key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
         restore-keys: ${{ runner.os }}-go-
 
-    - name: Install dependencies
-      run: go get golang.org/x/lint/golint
-
     - name: Run go fmt
       if: runner.os != 'Windows'
-      run: diff -u <(echo -n) <(gofmt -d -s .)
+      run: make fmt
 
-    - name: Run go lint
-      run: golint -set_exit_status ./...
-
-    - name: Run go vet
-      run: go vet ./...
+    - name: Run golangci-lint
+      if: runner.os != 'Windows'
+      uses: golangci/golangci-lint-action@v2
+      with:
+        version: v1.29
 
     - name: Run go test
-      run: go test -v -race -coverprofile coverage.txt -covermode atomic ./...
+      run: make test
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
