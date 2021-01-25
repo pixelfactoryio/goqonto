@@ -32,9 +32,9 @@ type labelsRoot struct {
 }
 
 // List all the labels
-func (s *LabelsService) List(ctx context.Context, memOpt *LabelsOptions) ([]Label, *Response, error) {
+func (s *LabelsService) List(ctx context.Context, opt *LabelsOptions) ([]Label, *Response, error) {
 
-	req, err := s.client.NewRequest(ctx, http.MethodGet, labelsBasePath, memOpt)
+	req, err := s.client.NewRequest(ctx, http.MethodGet, labelsBasePath, opt)
 	if err != nil {
 		return nil, nil, err
 	}

@@ -62,9 +62,9 @@ type transactionsRoot struct {
 }
 
 // List all the transactions for a given Org.Slug and BankAccount.IBAN
-func (s *TransactionsService) List(ctx context.Context, trxOpt *TransactionsOptions) ([]Transaction, *Response, error) {
+func (s *TransactionsService) List(ctx context.Context, opt *TransactionsOptions) ([]Transaction, *Response, error) {
 
-	req, err := s.client.NewRequest(ctx, http.MethodGet, transactionsBasePath, trxOpt)
+	req, err := s.client.NewRequest(ctx, http.MethodGet, transactionsBasePath, opt)
 	if err != nil {
 		return nil, nil, err
 	}
