@@ -193,6 +193,18 @@ func TestNewRequest(t *testing.T) {
 	}
 }
 
+func TestNewRequest_badBody(t *testing.T) {
+	c := NewClient(nil)
+
+	inURL := "v2/foo"
+	badBody := make(chan struct{})
+
+	_, err := c.NewRequest(ctx, http.MethodGet, inURL, badBody)
+	if err == nil {
+		t.Errorf("Expected error to be returned")
+	}
+}
+
 func TestNewRequest_badURL(t *testing.T) {
 	c := NewClient(nil)
 	_, err := c.NewRequest(ctx, http.MethodGet, ":", nil)
