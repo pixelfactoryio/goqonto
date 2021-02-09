@@ -48,9 +48,12 @@ func main() {
 
 	// List Transactions
 	params := &goqonto.TransactionsOptions{
-		Slug:   orga.Slug,
-		IBAN:   orga.BankAccounts[0].IBAN,
-		Status: []string{"completed"},
+		Slug:          orga.Slug,
+		IBAN:          orga.BankAccounts[0].IBAN,
+		Side:          goqonto.TransactionSideCredit,
+		SortBy:        goqonto.TransactionSortByUpdatedAtAsc,
+		OperationType: []string{goqonto.TransactionOperationTypeCard},
+		Status:        []string{goqonto.TransactionStatusCompleted},
 	}
 
 	transactions, resp, err := qonto.Transactions.List(ctx, params)
