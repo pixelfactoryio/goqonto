@@ -1,8 +1,12 @@
 name: tests
 
 on:
-  pull_request:
   push:
+    branches:
+      - 'master'
+    tags:
+      - 'v*'
+  pull_request:
 
 jobs:
   test:
@@ -13,13 +17,13 @@ jobs:
     runs-on: ${{ matrix.platform }}
 
     steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
       - name: Set up Go 1.x
         uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
-
-      - name: Check out code
-        uses: actions/checkout@v2
 
       - name: Cache go modules
         uses: actions/cache@v1
@@ -45,3 +49,12 @@ jobs:
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v2
+        if: success() && startsWith(github.ref, 'refs/tags/') && runner.os != 'Windows'
+        with:
+          version: latest
+          args: release --rm-dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
