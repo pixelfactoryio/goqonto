@@ -111,7 +111,8 @@ type Transaction struct {
 	// Date the transaction impacted the balance of the account in ISO8601 (yyyy-MM-dd'T'HH:mm:ss.SSSZ).
 	SettledAt time.Time `json:"settled_at,omitempty"`
 
-	//  Date at which the transaction impacted the authorized balance of the account in ISO8601 (yyyy-MM-dd'T'HH:mm:ss.SSSZ).
+	// Date at which the transaction impacted the authorized balance of the account
+	// in ISO8601 (yyyy-MM-dd'T'HH:mm:ss.SSSZ).
 	EmittedAt time.Time `json:"emitted_at"`
 
 	// Date at which the transaction was last updated in ISO8601 (yyyy-MM-dd'T'HH:mm:ss.SSSZ).
