@@ -1,6 +1,8 @@
 name: tests
 
-on: [push, pull_request]
+on:
+  pull_request:
+  push:
 
 jobs:
   test:
@@ -11,35 +13,35 @@ jobs:
     runs-on: ${{ matrix.platform }}
 
     steps:
-    - name: Set up Go 1.x
-      uses: actions/setup-go@v2
-      with:
-        go-version: ${{ matrix.go-version }}
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go-version }}
 
-    - name: Check out code
-      uses: actions/checkout@v2
+      - name: Check out code
+        uses: actions/checkout@v2
 
-    - name: Cache go modules
-      uses: actions/cache@v1
-      with:
-        path: ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
-        restore-keys: ${{ runner.os }}-go-
+      - name: Cache go modules
+        uses: actions/cache@v1
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
+          restore-keys: ${{ runner.os }}-go-
 
-    - name: Run go fmt
-      if: runner.os != 'Windows'
-      run: make fmt
+      - name: Run go fmt
+        if: runner.os != 'Windows'
+        run: make fmt
 
-    - name: Run golangci-lint
-      if: runner.os != 'Windows'
-      uses: golangci/golangci-lint-action@v2
-      with:
-        version: v1.29
+      - name: Run golangci-lint
+        if: runner.os != 'Windows'
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.29
 
-    - name: Run go test
-      run: make test
+      - name: Run go test
+        run: make test
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
