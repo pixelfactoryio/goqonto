@@ -173,12 +173,14 @@ func TestTransactionsService_Get(t *testing.T) {
 	setup()
 	defer teardown()
 
-	mux.HandleFunc(fmt.Sprintf("/%s/6ea8271c-87b1-49d0-a66f-1e29a2fe43ba", transactionsBasePath), func(w http.ResponseWriter, r *http.Request) {
-		testMethod(t, r, http.MethodGet)
-		testHeader(t, r, "Accept", mediaType)
-		testHeader(t, r, "Content-Type", mediaType)
-		fmt.Fprint(w, getTransactionFixture)
-	})
+	mux.HandleFunc(
+		fmt.Sprintf("/%s/6ea8271c-87b1-49d0-a66f-1e29a2fe43ba", transactionsBasePath),
+		func(w http.ResponseWriter, r *http.Request) {
+			testMethod(t, r, http.MethodGet)
+			testHeader(t, r, "Accept", mediaType)
+			testHeader(t, r, "Content-Type", mediaType)
+			fmt.Fprint(w, getTransactionFixture)
+		})
 
 	got, _, err := client.Transactions.Get(ctx, "6ea8271c-87b1-49d0-a66f-1e29a2fe43ba")
 	if err != nil {
