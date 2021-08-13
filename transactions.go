@@ -3,6 +3,7 @@ package goqonto
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 )
@@ -73,6 +74,9 @@ type TransactionsOptions struct {
 // Transaction struct
 // https://api-doc.qonto.eu/2.0/transactions/list-transactions
 type Transaction struct {
+	// ID
+	ID string `json:"id"`
+
 	// Transaction ID.
 	TransactionID string `json:"transaction_id"`
 
@@ -213,4 +217,28 @@ func (s *TransactionsService) List(ctx context.Context, opt *TransactionsOptions
 	}
 
 	return root.Transactions, resp, nil
+}
+
+// transactionRoot root key in the JSON response for transactions
+type transactionRoot struct {
+	Transaction *Transaction `json:"transaction"`
+}
+
+// Get Transaction
+func (s *TransactionsService) Get(ctx context.Context, id string) (*Transaction, *Response, error) {
+
+	path := fmt.Sprintf("%s/%s", transactionsBasePath, id)
+
+	req, err := s.client.NewRequest(ctx, http.MethodGet, path, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	root := new(transactionRoot)
+	resp, err := s.client.Do(ctx, req, root)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return root.Transaction, resp, nil
 }
