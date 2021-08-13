@@ -32,7 +32,7 @@ type BankAccount struct {
 	AuthorizedBalanceCents int     `json:"authorized_balance_cents"`
 }
 
-// organizationsRoot root key in the JSON response for organizations
+// organizationRoot root key in the JSON response for organizations
 type organizationRoot struct {
 	Organization *Organization `json:"organization"`
 }
